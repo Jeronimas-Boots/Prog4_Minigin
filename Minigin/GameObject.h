@@ -6,7 +6,7 @@
 namespace dae
 {
 	class Texture2D;
-	class GameObject final
+	class GameObject
 	{
 	private:
 		Transform m_transform{};
