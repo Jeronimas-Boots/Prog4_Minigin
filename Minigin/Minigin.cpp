@@ -91,6 +91,7 @@ dae::Minigin::~Minigin()
 void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
+	m_LastTime = std::chrono::high_resolution_clock::now();
 #ifndef __EMSCRIPTEN__
 	while (!m_quit)
 		RunOneFrame();
