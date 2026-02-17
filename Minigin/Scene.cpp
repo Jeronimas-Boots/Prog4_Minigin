@@ -1,9 +1,10 @@
 #include <algorithm>
 #include "Scene.h"
+#include <assert.h>
 
 using namespace dae;
 
-void Scene::Add(std::unique_ptr<GameObject> object)
+void Scene::Add(std::shared_ptr<GameObject> object)
 {
 	assert(object != nullptr && "Cannot add a null GameObject to the scene.");
 	m_objects.emplace_back(std::move(object));
