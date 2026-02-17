@@ -9,8 +9,8 @@
 
 dae::TextComponent::TextComponent(GameObject* owner, const std::string& text, const SDL_Color& color, std::shared_ptr<Font> font)
 	: Component(owner)
-	, m_Color(color)
 	, m_Text(text)
+	, m_Color(color)
 	, m_pFont(std::move(font))
 {
 }
