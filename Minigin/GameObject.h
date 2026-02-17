@@ -15,9 +15,9 @@ namespace dae
 
 		std::unordered_map<std::string, std::unique_ptr<Component>> m_Components;
 	public:
-		virtual void Update(float deltaTime);
-		virtual void FixedUpdate(float fixedTimeStep);
-		virtual void Render() const;
+		void Update(float deltaTime);
+		void FixedUpdate(float fixedTimeStep);
+		void Render() const;
 
 		//void SetTexture(const std::string& filename);
 		//void SetPosition(float x, float y);
