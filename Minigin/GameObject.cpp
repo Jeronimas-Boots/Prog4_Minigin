@@ -67,3 +67,13 @@ bool dae::GameObject::HasComponent(const std::string& componentTypeName)
 
 	return m_Components.find(componentTypeName) != m_Components.end();
 }
+
+void dae::GameObject::MarkForDeath()
+{
+	m_MarkedForDeath = true;
+}
+
+bool dae::GameObject::IsMarkedForDeath() const
+{
+	return m_MarkedForDeath;
+}
