@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "TextComponent.h"
 
 namespace dae
 {
@@ -13,5 +14,6 @@ namespace dae
 	private:
 		float m_AccumTime{ 0.f };
 		int m_FrameCount{ 0 };
+		TextComponent* m_TextComponent = nullptr;
 	};
 }
