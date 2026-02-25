@@ -25,8 +25,8 @@ static void load()
 
 	// Background GameObject
 	auto backgroundGO = std::make_shared<dae::GameObject>();
-	backgroundGO->AddComponent(std::make_unique<dae::TransformComponent>(backgroundGO.get(), 0.f, 0.f, 0.f));
-	backgroundGO->AddComponent(std::make_unique<dae::RenderComponent>(
+	backgroundGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(backgroundGO.get(), 0.f, 0.f, 0.f));
+	backgroundGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		backgroundGO.get(),
 		dae::ResourceManager::GetInstance().LoadTexture("background.png")));
 	scene.Add(backgroundGO);
@@ -34,15 +34,15 @@ static void load()
 	// FPS GameObject
 	auto fontSmall = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 26);
 	auto fpsGO = std::make_shared<dae::GameObject>();
-	fpsGO->AddComponent(std::make_unique<dae::TransformComponent>(fpsGO.get(), 10.f, 10.f, 0.f));
-	fpsGO->AddComponent(std::make_unique<dae::TextComponent>(fpsGO.get(), "FPS: 0", SDL_Color{ 255, 255, 255, 255 }, fontSmall));
-	fpsGO->AddComponent(std::make_unique<dae::FPSComponent>(fpsGO.get()));
+	fpsGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(fpsGO.get(), 10.f, 10.f, 0.f));
+	fpsGO->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(fpsGO.get(), "FPS: 0", SDL_Color{ 255, 255, 255, 255 }, fontSmall));
+	fpsGO->AddComponent<dae::FPSComponent>(std::make_unique<dae::FPSComponent>(fpsGO.get()));
 	scene.Add(fpsGO);
 
 	// Logo GameObject
 	auto logoGO = std::make_shared<dae::GameObject>();
-	logoGO->AddComponent(std::make_unique<dae::TransformComponent>(logoGO.get(), 358.f, 180.f, 0.f));
-	logoGO->AddComponent(std::make_unique<dae::RenderComponent>(
+	logoGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(logoGO.get(), 358.f, 180.f, 0.f));
+	logoGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		logoGO.get(),
 		dae::ResourceManager::GetInstance().LoadTexture("logo.png")));
 	scene.Add(logoGO);
@@ -50,8 +50,8 @@ static void load()
 	// Text GameObject
 	auto fontLarge = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	auto textGo = std::make_shared<dae::GameObject>();
-	textGo->AddComponent(std::make_unique<dae::TransformComponent>(textGo.get(), 292.f, 20.f, 0.f));
-	textGo->AddComponent(std::make_unique<dae::TextComponent>(textGo.get(), "Programming 4 Assignment", SDL_Color{ 255, 255, 0, 255 }, fontLarge));
+	textGo->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(textGo.get(), 292.f, 20.f, 0.f));
+	textGo->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(textGo.get(), "Programming 4 Assignment", SDL_Color{ 255, 255, 0, 255 }, fontLarge));
 	scene.Add(textGo);
 }
 

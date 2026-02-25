@@ -41,7 +41,7 @@ void dae::TextComponent::Render() const
 {
 	if (!m_ptextTexture) return;
 
-	TransformComponent* transform = dynamic_cast<TransformComponent*>(GetOwner()->GetComponent("TransformComponent"));
+	TransformComponent* transform = GetOwner()->GetComponent<TransformComponent>();
 	if (!transform) return;
 
 	const glm::vec3& pos = transform->GetPositioin();

@@ -12,8 +12,6 @@ namespace dae
 		void SetPosition(float x, float y, float z = 0.f);
 		const glm::vec3& GetPositioin() const;
 
-		std::string GetTypeName() const override { return "TransformComponent"; }
-
 	private:
 		glm::vec3 m_Position;
 	};

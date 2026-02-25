@@ -14,7 +14,7 @@ namespace dae
 
 		void SetTexture(std::shared_ptr<Texture2D> texture);
 
-		std::string GetTypeName() const override { return "RenderComponent"; }
+		
 	private:
 		std::shared_ptr<Texture2D> m_pTexture;
 	};

@@ -13,7 +13,7 @@ dae::RenderComponent::RenderComponent(GameObject* owner, std::shared_ptr<Texture
 void dae::RenderComponent::Render() const
 {
 	if (!m_pTexture) return;
-	TransformComponent* transform = dynamic_cast<TransformComponent*>(GetOwner()->GetComponent("TransformComponent"));
+	TransformComponent* transform = GetOwner()->GetComponent<TransformComponent>();
 	if (!transform) return;
 	const glm::vec3& pos = transform->GetPositioin();
 	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);

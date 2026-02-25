@@ -11,8 +11,8 @@ namespace dae
 		bool m_quit{};
 		std::chrono::steady_clock::time_point m_LastTime{};
 		float m_Lag = 0.f;
-		const float m_FixedTimeStep = 1.f / 30.f;
-		const float m_MsPerFrame = 1000.f / 144.f;
+		const float m_FixedTimeStep = 1.f / 30.f;	// in seconds
+		const float m_MsPerFrame = 1000.f / 144.f;	// in miliseconds
 
 	public:
 		explicit Minigin(const std::filesystem::path& dataPath);

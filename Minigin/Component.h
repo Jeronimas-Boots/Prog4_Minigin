@@ -16,8 +16,6 @@ namespace dae
 		virtual void FixedUpdate(float /*fixedTimeStep*/) {};
 		virtual void Render() const {};
 
-		virtual std::string GetTypeName() const = 0;
-
 	protected:
 		explicit Component(GameObject* owner) : m_Owner(owner) {}
 		GameObject* GetOwner() const { return m_Owner; }
