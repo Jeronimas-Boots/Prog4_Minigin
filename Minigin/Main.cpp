@@ -8,7 +8,6 @@
 #include "Minigin.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
-#include "TextObject.h"
 #include "Scene.h"
 #include "TransformComponent.h"
 #include "RenderComponent.h"

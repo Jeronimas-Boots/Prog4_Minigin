@@ -22,9 +22,9 @@ namespace dae
 
 		GameObject* m_Parent;
 		std::vector<GameObject*> m_Children;
-		glm::vec3 m_LocalPosition;
-		glm::vec3 m_WorldPosition;
-		bool m_PositionDirty;
+		glm::vec3 m_LocalPosition	{ };
+		glm::vec3 m_WorldPosition	{ };
+		bool m_PositionDirty		{ false };
 
 		bool IsChild(GameObject* parent) const;
 
