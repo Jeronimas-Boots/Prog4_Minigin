@@ -13,6 +13,7 @@
 #include "RenderComponent.h"
 #include "TextComponent.h"
 #include "FPSComponent.h"
+#include "RotateComponent.h"
 #include <memory>
 
 #include <filesystem>
@@ -54,6 +55,29 @@ static void load()
 	textGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(textGO.get(), nullptr));
 	textGO->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(textGO.get(), "Programming 4 Assignment", SDL_Color{ 255, 255, 0, 255 }, fontLarge));
 	scene.Add(std::move(textGO));
+
+	// Sprite GameObjects
+	// Blue Tank
+	auto blueTankGO = std::make_unique<dae::GameObject>();
+	blueTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankGO.get(), 150.f, 280.f, 0.f));
+	blueTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
+		blueTankGO.get(),
+		dae::ResourceManager::GetInstance().LoadTexture("BlueTank.png")));
+	blueTankGO->AddComponent<dae::RotateComponent>(std::make_unique<dae::RotateComponent>(blueTankGO.get(), 25.f, 7.f));
+	
+
+	// Red Tank
+	auto redTankGO = std::make_unique<dae::GameObject>();
+	redTankGO->SetParent(blueTankGO.get());
+	redTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(redTankGO.get(), 0.f, 0.f, 0.f));
+	redTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
+		redTankGO.get(),
+		dae::ResourceManager::GetInstance().LoadTexture("RedTank.png")));
+	redTankGO->AddComponent<dae::RotateComponent>(std::make_unique<dae::RotateComponent>(redTankGO.get(), 50.f, -5.f));
+
+
+	scene.Add(std::move(blueTankGO));
+	scene.Add(std::move(redTankGO));
 }
 
 int main(int, char*[]) {

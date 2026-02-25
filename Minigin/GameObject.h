@@ -28,7 +28,7 @@ namespace dae
 
 		bool IsChild(GameObject* parent) const;
 
-		void SetLocalPosition(const glm::vec3& pos);
+
 		void SetPositionDirty();
 		void UpdateWorldPosition();
 
@@ -41,7 +41,9 @@ namespace dae
 		void Render() const;
 
 		// Scenegraph
-		void SetParent(GameObject* parent, bool keepWorldPosition);
+		void SetParent(GameObject* parent, bool keepWorldPosition = false);
+		void SetLocalPosition(const glm::vec3& pos);
+		const glm::vec3& GetLocalPosition() const { return m_LocalPosition; }
 		const glm::vec3& GetWorldPosition();
 		
 

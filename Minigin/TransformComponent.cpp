@@ -1,18 +1,23 @@
 #include "TransformComponent.h"
+#include "GameObject.h"
 
 dae::TransformComponent::TransformComponent(GameObject* owner, float x, float y, float z)
 	: Component(owner)
-	, m_Position(x, y, z)
 {
-
+	owner->SetLocalPosition({ x, y, z });
 }
 
-void dae::TransformComponent::SetPosition(float x, float y, float z)
+void dae::TransformComponent::SetLocalPosition(float x, float y, float z)
 {
-	m_Position = { x, y, z };
+	GetOwner()->SetLocalPosition({ x, y, z });
 }
 
-const glm::vec3& dae::TransformComponent::GetPositioin() const
+const glm::vec3& dae::TransformComponent::GetWorldPosition() const
 {
-	return m_Position;
+	return GetOwner()->GetWorldPosition();
+}
+
+const glm::vec3& dae::TransformComponent::GetLocalPosition() const
+{
+	return GetOwner()->GetLocalPosition();
 }

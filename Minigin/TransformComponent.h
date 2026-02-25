@@ -9,10 +9,8 @@ namespace dae
 	public:
 		TransformComponent(GameObject* owner, float x = 0.f, float y = 0.f, float z = 0.f);
 
-		void SetPosition(float x, float y, float z = 0.f);
-		const glm::vec3& GetPositioin() const;
-
-	private:
-		glm::vec3 m_Position;
+		void SetLocalPosition(float x, float y, float z = 0.f);
+		const glm::vec3& GetWorldPosition() const;
+		const glm::vec3& GetLocalPosition() const;
 	};
 }
