@@ -1,7 +1,57 @@
-#include <string>
 #include "GameObject.h"
+#include <algorithm>
 
 dae::GameObject::~GameObject() = default;
+
+bool dae::GameObject::IsChild(GameObject* parent) const
+{
+	for (auto& child : m_Children)
+	{
+		if (child == parent) return true;
+	}
+	return false;
+}
+
+void dae::GameObject::SetLocalPosition(const glm::vec3& pos)
+{
+	m_LocalPosition = pos;
+	SetPositionDirty();
+}
+
+void dae::GameObject::SetPositionDirty()
+{
+	m_PositionDirty = true;
+	for (auto& child : m_Children)
+	{
+		child->SetPositionDirty();
+	}
+}
+
+void dae::GameObject::UpdateWorldPosition()
+{
+	if (m_PositionDirty)
+	{
+		if (m_Parent == nullptr)
+			m_WorldPosition = m_LocalPosition;
+		else
+			m_WorldPosition = m_Parent->GetWorldPosition() + m_LocalPosition;
+	}
+	m_PositionDirty = false;
+}
+
+void dae::GameObject::AddChild(GameObject* child)
+{
+	m_Children.push_back(child);
+}
+
+void dae::GameObject::RemoveChild(GameObject* child)
+{
+	auto it = std::find(m_Children.begin(), m_Children.end(), child);
+	if (it != m_Children.end())
+	{
+		m_Children.erase(it);
+	}
+}
 
 void dae::GameObject::Update(float deltaTime)
 {
@@ -28,35 +78,29 @@ void dae::GameObject::Render() const
 	}
 }
 
-//dae::Component* dae::GameObject::AddComponent(std::unique_ptr<Component> component) // moet weg... componenet hier doorgeven kan niet valid zijn.
-//{
-//	if (!component) return nullptr;
-//	std::string typeName = component->GetTypeName();
-//	if (m_Components.find(typeName) != m_Components.end()) return nullptr;
-//
-//	Component* ptr = component.get();
-//	m_Components[typeName] = std::move(component);
-//	return ptr;
-//}
-//
-//void dae::GameObject::RemoveComponent(const std::string& componentTypeName)
-//{
-//	m_Components.erase(componentTypeName);
-//}
-//
-//dae::Component* dae::GameObject::GetComponent(const std::string& componentTypeName) const
-//{
-//	auto comp = m_Components.find(componentTypeName);
-//	if (comp != m_Components.end())
-//		return comp->second.get();
-//	return nullptr;
-//}
-//
-//bool dae::GameObject::HasComponent(const std::string& componentTypeName)
-//{
-//
-//	return m_Components.find(componentTypeName) != m_Components.end();
-//}
+void dae::GameObject::SetParent(GameObject* parent, bool keepWorldPosition)
+{
+	if (IsChild(parent) || parent == this || m_Parent == parent)
+		return;
+	if (parent == nullptr)
+		SetLocalPosition(GetWorldPosition());
+	else
+	{
+		if (keepWorldPosition)
+			SetLocalPosition(GetWorldPosition() - parent->GetWorldPosition());
+		SetPositionDirty();
+	}
+	if (m_Parent) m_Parent->RemoveChild(this);
+	m_Parent = parent;
+	if (m_Parent) m_Parent->AddChild(this);
+}
+
+const glm::vec3& dae::GameObject::GetWorldPosition()
+{
+	if (m_PositionDirty)
+		UpdateWorldPosition();
+	return m_WorldPosition;
+}
 
 void dae::GameObject::MarkForDeath()
 {

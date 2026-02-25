@@ -2,9 +2,9 @@
 #include <string>
 #include <memory>
 #include "Component.h"
-#include <unordered_map>
 #include <vector>
 #include <typeindex>
+#include <glm/glm.hpp>
 
 namespace dae
 {
@@ -20,20 +20,34 @@ namespace dae
 		std::vector<ComponentEntry> m_Components;
 		bool m_MarkedForDeath{ false };
 
+		GameObject* m_Parent;
+		std::vector<GameObject*> m_Children;
+		glm::vec3 m_LocalPosition;
+		glm::vec3 m_WorldPosition;
+		bool m_PositionDirty;
+
+		bool IsChild(GameObject* parent) const;
+
+		void SetLocalPosition(const glm::vec3& pos);
+		void SetPositionDirty();
+		void UpdateWorldPosition();
+
+		void AddChild(GameObject* child);
+		void RemoveChild(GameObject* child);
+
 	public:
 		void Update(float deltaTime);
 		void FixedUpdate(float fixedTimeStep);
 		void Render() const;
 
-		//// Components
-		//Component* AddComponent(std::unique_ptr<Component> component);
-		//void RemoveComponent(const std::string& componentTypeName);
-		//Component* GetComponent(const std::string& componentTypeName) const;
-		//bool HasComponent(const std::string& componentTypeName);
+		// Scenegraph
+		void SetParent(GameObject* parent, bool keepWorldPosition);
+		const glm::vec3& GetWorldPosition();
+		
 
 		// Components
 		template<typename ComponentType>
-		ComponentType* AddComponent(std::unique_ptr<ComponentType> component);
+		ComponentType* AddComponent(std::unique_ptr<ComponentType> component); // moet anders??... component mag nog niet bestaan voor dat je het hier door geeft.
 		
 		template<typename ComponentType>
 		void RemoveComponent();
