@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "GameObject.h"
 #include "TransformComponent.h"
+#include "RenderComponent.h"
 #include "Texture2D.h"
 
 #include <stdexcept>
@@ -39,13 +40,11 @@ void dae::TextComponent::Update(float /*deltaTime*/)
 
 void dae::TextComponent::Render() const
 {
-	if (!m_ptextTexture) return;
-
-	TransformComponent* transform = GetOwner()->GetComponent<TransformComponent>();
-	if (!transform) return;
-
-	const glm::vec3& pos = transform->GetPositioin();
-	Renderer::GetInstance().RenderTexture(*m_ptextTexture, pos.x, pos.y);
+	RenderComponent* renderer = GetOwner()->GetComponent<RenderComponent>();
+	
+	if (!renderer) return;
+	renderer->SetTexture(m_ptextTexture);
+	renderer->Render();
 }
 
 void dae::TextComponent::SetText(const std::string& text)
