@@ -57,13 +57,18 @@ static void load()
 	scene.Add(std::move(textGO));
 
 	// Sprite GameObjects
+	// Empty Game Object
+	auto emptyGO = std::make_unique<dae::GameObject>();
+	emptyGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(emptyGO.get(), 150.f, 280.f, 0.f));
+
 	// Blue Tank
 	auto blueTankGO = std::make_unique<dae::GameObject>();
-	blueTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankGO.get(), 150.f, 280.f, 0.f));
+	blueTankGO->SetParent(emptyGO.get());
+	blueTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankGO.get(), 0.f, 0.f, 0.f));
 	blueTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		blueTankGO.get(),
 		dae::ResourceManager::GetInstance().LoadTexture("BlueTank.png")));
-	blueTankGO->AddComponent<dae::RotateComponent>(std::make_unique<dae::RotateComponent>(blueTankGO.get(), 25.f, 7.f));
+	blueTankGO->AddComponent<dae::RotateComponent>(std::make_unique<dae::RotateComponent>(blueTankGO.get(), 50.f, 7.f));
 	
 
 	// Red Tank
@@ -73,9 +78,9 @@ static void load()
 	redTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		redTankGO.get(),
 		dae::ResourceManager::GetInstance().LoadTexture("RedTank.png")));
-	redTankGO->AddComponent<dae::RotateComponent>(std::make_unique<dae::RotateComponent>(redTankGO.get(), 50.f, -5.f));
+	redTankGO->AddComponent<dae::RotateComponent>(std::make_unique<dae::RotateComponent>(redTankGO.get(), 50.f, -7.f));
 
-
+	scene.Add(std::move(emptyGO));
 	scene.Add(std::move(blueTankGO));
 	scene.Add(std::move(redTankGO));
 }

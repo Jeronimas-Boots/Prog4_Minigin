@@ -9,7 +9,7 @@ namespace dae
 	class RotateComponent final : public Component
 	{
 	public:
-		RotateComponent(GameObject* owner, float radius, float speed = 5.f);
+		RotateComponent(GameObject* owner, float radius, float speed);
 
 		void Update(float deltaTime) override;
 

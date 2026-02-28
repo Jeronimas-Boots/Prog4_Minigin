@@ -55,7 +55,6 @@ void dae::GameObject::RemoveChild(GameObject* child)
 
 void dae::GameObject::Update(float deltaTime)
 {
-	UpdateWorldPosition();
 	for (auto& component : m_Components)
 	{
 		component.component->Update(deltaTime);

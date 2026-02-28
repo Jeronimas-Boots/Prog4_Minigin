@@ -55,7 +55,7 @@ namespace dae
 		void RemoveComponent();
 		
 		template<typename ComponentType>
-		ComponentType* GetComponent() const;
+		[[nodiscard]] ComponentType* GetComponent() const;
 		
 		template<typename ComponentType>
 		bool HasComponent() const;
