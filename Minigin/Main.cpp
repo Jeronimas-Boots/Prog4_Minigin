@@ -15,6 +15,7 @@
 #include "FPSComponent.h"
 #include "RotateComponent.h"
 #include <memory>
+#include "BenchMarkComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -83,6 +84,14 @@ static void load()
 	scene.Add(std::move(emptyGO));
 	scene.Add(std::move(blueTankGO));
 	scene.Add(std::move(redTankGO));
+
+
+	// Benchmark Game Object
+	auto benchmarkGO = std::make_unique<dae::GameObject>();
+	benchmarkGO->AddComponent<dae::BenchmarkComponent>(std::make_unique<dae::BenchmarkComponent>(benchmarkGO.get()));
+	scene.Add(std::move(benchmarkGO));
+
+
 }
 
 int main(int, char*[]) {
