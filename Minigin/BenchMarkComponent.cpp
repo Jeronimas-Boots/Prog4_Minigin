@@ -43,7 +43,7 @@ std::vector<float> dae::BenchmarkComponent::ProcessResults(const std::vector<flo
         std::vector<float> samples;
         for (int sampleIdx = 0; sampleIdx < numSamples; ++sampleIdx)
         {
-            int index = sampleIdx * numStepSizes + stepIdx;
+            size_t index = sampleIdx * numStepSizes + stepIdx;
             if (index < rawData.size())
             {
                 samples.push_back(rawData[index]);
