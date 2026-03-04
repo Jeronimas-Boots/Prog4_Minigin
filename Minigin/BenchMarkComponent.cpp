@@ -1,4 +1,4 @@
-#include "BenchmarkComponent.h"
+#include "BenchMarkComponent.h"
 #include <imgui.h>
 #include <chrono>
 #include <algorithm>
@@ -160,60 +160,60 @@ void dae::BenchmarkComponent::RunBenchmarkEx3()
 
 void dae::BenchmarkComponent::Render() const
 {
-    //if (ImGui::Begin("Exercise 1"))
-    //{
-    //    ImGui::Text("# Samples:");
-    //    ImGui::SameLine();
-    //    static int numSamples = m_SamplesEx1;
-    //    ImGui::InputInt("##Samples", &numSamples);
-    //
-    //    if (ImGui::Button("Run Benchmark"))
-    //    {
-    //        const_cast<BenchmarkComponent*>(this)->m_SamplesEx1 = numSamples;
-    //        const_cast<BenchmarkComponent*>(this)->m_TimesEx1.clear();
-    //        const_cast<BenchmarkComponent*>(this)->RunBenchmarkEx1();
-    //    }
-    //
-    //    if (!m_TimesEx1.empty())
-    //    {
-    //        ImGui::PlotLines("##Ex1Plot", m_TimesEx1.data(), static_cast<int>(m_TimesEx1.size()),
-    //            0, nullptr, 0.0f, *std::max_element(m_TimesEx1.begin(), m_TimesEx1.end()), ImVec2(0, 100));
-    //    }
-    //}
-    //ImGui::End();
-    //
-    //if (ImGui::Begin("Exercise 2"))
-    //{
-    //    ImGui::Text("# Samples:");
-    //    ImGui::SameLine();
-    //    static int numSamples = m_SamplesEx2;
-    //    ImGui::InputInt("##Samples", &numSamples);
-    //
-    //    if (ImGui::Button("Thrash the cache with GameObjectData"))
-    //    {
-    //        const_cast<BenchmarkComponent*>(this)->m_SamplesEx2 = numSamples;
-    //        const_cast<BenchmarkComponent*>(this)->m_TimesEx2.clear();
-    //        const_cast<BenchmarkComponent*>(this)->RunBenchmarkEx2();
-    //    }
-    //
-    //    if (!m_TimesEx2.empty())
-    //    {
-    //        ImGui::PlotLines("##Ex2Plot", m_TimesEx2.data(), static_cast<int>(m_TimesEx2.size()),
-    //            0, nullptr, 0.0f, *std::max_element(m_TimesEx2.begin(), m_TimesEx2.end()), ImVec2(0, 100));
-    //    }
-    //
-    //    if (ImGui::Button("Thrash the cache with GameObjectDataAlt"))
-    //    {
-    //        const_cast<BenchmarkComponent*>(this)->m_SamplesEx2 = numSamples;
-    //        const_cast<BenchmarkComponent*>(this)->m_TimesEx2Alt.clear();
-    //        const_cast<BenchmarkComponent*>(this)->RunBenchmarkEx3();
-    //    }
-    //
-    //    if (!m_TimesEx2Alt.empty())
-    //    {
-    //        ImGui::PlotLines("##Ex3Plot", m_TimesEx2Alt.data(), static_cast<int>(m_TimesEx2Alt.size()),
-    //            0, nullptr, 0.0f, *std::max_element(m_TimesEx2Alt.begin(), m_TimesEx2Alt.end()), ImVec2(0, 100));
-    //    }
-    //}
-    //ImGui::End();
+    if (ImGui::Begin("Exercise 1"))
+    {
+        ImGui::Text("# Samples:");
+        ImGui::SameLine();
+        static int numSamples = m_SamplesEx1;
+        ImGui::InputInt("##Samples", &numSamples);
+    
+        if (ImGui::Button("Run Benchmark"))
+        {
+            const_cast<BenchmarkComponent*>(this)->m_SamplesEx1 = numSamples;
+            const_cast<BenchmarkComponent*>(this)->m_TimesEx1.clear();
+            const_cast<BenchmarkComponent*>(this)->RunBenchmarkEx1();
+        }
+    
+        if (!m_TimesEx1.empty())
+        {
+            ImGui::PlotLines("##Ex1Plot", m_TimesEx1.data(), static_cast<int>(m_TimesEx1.size()),
+                0, nullptr, 0.0f, *std::max_element(m_TimesEx1.begin(), m_TimesEx1.end()), ImVec2(0, 100));
+        }
+    }
+    ImGui::End();
+    
+    if (ImGui::Begin("Exercise 2"))
+    {
+        ImGui::Text("# Samples:");
+        ImGui::SameLine();
+        static int numSamples = m_SamplesEx2;
+        ImGui::InputInt("##Samples", &numSamples);
+    
+        if (ImGui::Button("Thrash the cache with GameObjectData"))
+        {
+            const_cast<BenchmarkComponent*>(this)->m_SamplesEx2 = numSamples;
+            const_cast<BenchmarkComponent*>(this)->m_TimesEx2.clear();
+            const_cast<BenchmarkComponent*>(this)->RunBenchmarkEx2();
+        }
+    
+        if (!m_TimesEx2.empty())
+        {
+            ImGui::PlotLines("##Ex2Plot", m_TimesEx2.data(), static_cast<int>(m_TimesEx2.size()),
+                0, nullptr, 0.0f, *std::max_element(m_TimesEx2.begin(), m_TimesEx2.end()), ImVec2(0, 100));
+        }
+    
+        if (ImGui::Button("Thrash the cache with GameObjectDataAlt"))
+        {
+            const_cast<BenchmarkComponent*>(this)->m_SamplesEx2 = numSamples;
+            const_cast<BenchmarkComponent*>(this)->m_TimesEx2Alt.clear();
+            const_cast<BenchmarkComponent*>(this)->RunBenchmarkEx3();
+        }
+    
+        if (!m_TimesEx2Alt.empty())
+        {
+            ImGui::PlotLines("##Ex3Plot", m_TimesEx2Alt.data(), static_cast<int>(m_TimesEx2Alt.size()),
+                0, nullptr, 0.0f, *std::max_element(m_TimesEx2Alt.begin(), m_TimesEx2Alt.end()), ImVec2(0, 100));
+        }
+    }
+    ImGui::End();
 }
