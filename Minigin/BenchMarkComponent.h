@@ -21,8 +21,6 @@ namespace dae
         std::vector<float> m_TimesEx2;
         std::vector<float> m_TimesEx2Alt;
 
-        bool m_BenchmarkRun = false;
-
         int m_SamplesEx1 = 10;
         int m_SamplesEx2 = 10;
     };
