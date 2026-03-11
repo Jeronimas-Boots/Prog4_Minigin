@@ -60,7 +60,7 @@ static void load()
 	
 	// Blue Tank
 	auto blueTankGO = std::make_unique<dae::GameObject>();
-	blueTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankGO.get(), 0.f, 0.f, 0.f));
+	blueTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankGO.get(), 200.f, 300.f, 0.f));
 	blueTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		blueTankGO.get(),
 		dae::ResourceManager::GetInstance().LoadTexture("BlueTank.png")));
@@ -82,7 +82,7 @@ static void load()
 
 	// Red Tank
 	auto redTankGO = std::make_unique<dae::GameObject>();
-	redTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(redTankGO.get(), 0.f, 0.f, 0.f));
+	redTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(redTankGO.get(), 250.f, 250.f, 0.f));
 	redTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		redTankGO.get(),
 		dae::ResourceManager::GetInstance().LoadTexture("RedTank.png")));
