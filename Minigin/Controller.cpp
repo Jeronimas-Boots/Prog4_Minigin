@@ -14,7 +14,9 @@ namespace dae
 	{
 	public:
 		explicit ControllerImpl(unsigned int controllerIndex)
+#ifdef _WIN32
 			: m_ControllerIndex(controllerIndex)
+#endif
 		{
 #ifndef _WIN32
 			// Open SDL gamepad by index
@@ -55,7 +57,8 @@ namespace dae
 				m_PreviousState = currentState;
 			}
 #else
-			// SDL implementation (Emscripten/other platforms)
+			// SDL implementation (Emscripten/other platforms) I have enlisted the help from LLM's here for I did not know how to make the emscripten work with gamepad
+
 			if (m_Gamepad)
 			{
 				unsigned int currentState = 0;
@@ -107,13 +110,13 @@ namespace dae
 	private:
 #ifdef _WIN32
 		XINPUT_STATE m_PreviousState{};
+		unsigned int m_ControllerIndex;
 #else
 		SDL_Gamepad* m_Gamepad{ nullptr };
 		unsigned int m_PreviousButtonState{ 0 };
 #endif
 		unsigned int m_ButtonsPressedThisFrame{ 0 };
 		unsigned int m_ButtonsReleasedThisFrame{ 0 };
-		unsigned int m_ControllerIndex;
 	};
 
 	Controller::Controller(unsigned int controllerIndex)
