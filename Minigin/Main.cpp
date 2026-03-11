@@ -78,6 +78,8 @@ static void load()
 	input.BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed,
 		std::make_unique<dae::MoveCommand>(blueTankGO.get(), glm::vec3{ 1.f, 0.f, 0.f }, player1Speed));
 
+	scene.Add(std::move(blueTankGO));
+
 	// Red Tank
 	auto redTankGO = std::make_unique<dae::GameObject>();
 	redTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(redTankGO.get(), 0.f, 0.f, 0.f));
