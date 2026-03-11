@@ -5,7 +5,7 @@
 #include <Xinput.h>
 #pragma comment(lib, "xinput.lib")
 #else
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #endif
 
 namespace dae
@@ -18,7 +18,13 @@ namespace dae
 		{
 #ifndef _WIN32
 			// Open SDL gamepad by index
-			m_Gamepad = SDL_OpenGamepad(SDL_GetGamepads(nullptr)[controllerIndex]);
+			int count = 0;
+			SDL_JoystickID* joysticks = SDL_GetJoysticks(&count);
+			if (joysticks && static_cast<int>(controllerIndex) < count)
+			{
+				m_Gamepad = SDL_OpenGamepad(joysticks[controllerIndex]);
+			}
+			SDL_free(joysticks);
 #endif
 		}
 
@@ -49,7 +55,7 @@ namespace dae
 				m_PreviousState = currentState;
 			}
 #else
-			// SDL implementation (Emscripten/other platforms) I have enlisted the help from LLM's here for I did not know how to make the emscripten work with gamepad
+			// SDL implementation (Emscripten/other platforms)
 			if (m_Gamepad)
 			{
 				unsigned int currentState = 0;
