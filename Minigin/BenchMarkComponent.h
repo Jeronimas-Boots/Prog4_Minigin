@@ -15,6 +15,8 @@ namespace dae
         void RunBenchmarkEx2();
         void RunBenchmarkEx3();
 
+        void PerFormBenchmark();
+
         std::vector<float> ProcessResults(const std::vector<float>& rawData, int numSamples) const;
 
         std::vector<float> m_TimesEx1;

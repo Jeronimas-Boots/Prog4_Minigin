@@ -53,7 +53,7 @@ std::vector<float> dae::BenchmarkComponent::ProcessResults(const std::vector<flo
         if (samples.empty()) continue;
 
         // Sort samples to identify outliers
-        std::sort(samples.begin(), samples.end());
+        std::sort(samples.begin(), samples.end()); // Not the best choice O(nLog(n))
 
         // Remove outliers (top and bottom 10%, minimum 1 from each end if we have enough samples)
         if (samples.size() > 2)
@@ -156,6 +156,11 @@ void dae::BenchmarkComponent::RunBenchmarkEx3()
 
     // Process results: remove outliers and calculate averages
     m_TimesEx2Alt = ProcessResults(rawData, m_SamplesEx2);
+}
+
+void dae::BenchmarkComponent::PerFormBenchmark()
+{
+
 }
 
 void dae::BenchmarkComponent::Render() const
