@@ -13,9 +13,9 @@
 #include "RenderComponent.h"
 #include "TextComponent.h"
 #include "FPSComponent.h"
-#include "RotateComponent.h"
 #include <memory>
-#include "BenchMarkComponent.h"
+#include "InputManager.h"
+#include "MoveCommand.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -57,39 +57,45 @@ static void load()
 	textGO->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(textGO.get(), "Programming 4 Assignment", SDL_Color{ 255, 255, 0, 255 }, fontLarge));
 	scene.Add(std::move(textGO));
 
-	// Sprite GameObjects
-	// Empty Game Object
-	auto emptyGO = std::make_unique<dae::GameObject>();
-	emptyGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(emptyGO.get(), 150.f, 280.f, 0.f));
-
+	
 	// Blue Tank
 	auto blueTankGO = std::make_unique<dae::GameObject>();
-	blueTankGO->SetParent(emptyGO.get());
 	blueTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankGO.get(), 0.f, 0.f, 0.f));
 	blueTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		blueTankGO.get(),
 		dae::ResourceManager::GetInstance().LoadTexture("BlueTank.png")));
-	blueTankGO->AddComponent<dae::RotateComponent>(std::make_unique<dae::RotateComponent>(blueTankGO.get(), 50.f, 7.f));
-	
+
+	auto& input = dae::InputManager::GetInstance();
+	constexpr float player1Speed = 100.f;
+
+	// Player 1 - WASD keyboard controls
+	input.BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed,
+		std::make_unique<dae::MoveCommand>(blueTankGO.get(), glm::vec3{ 0.f, -1.f, 0.f }, player1Speed));
+	input.BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed,
+		std::make_unique<dae::MoveCommand>(blueTankGO.get(), glm::vec3{ 0.f, 1.f, 0.f }, player1Speed));
+	input.BindCommand(SDL_SCANCODE_A, dae::KeyState::Pressed,
+		std::make_unique<dae::MoveCommand>(blueTankGO.get(), glm::vec3{ -1.f, 0.f, 0.f }, player1Speed));
+	input.BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed,
+		std::make_unique<dae::MoveCommand>(blueTankGO.get(), glm::vec3{ 1.f, 0.f, 0.f }, player1Speed));
 
 	// Red Tank
 	auto redTankGO = std::make_unique<dae::GameObject>();
-	redTankGO->SetParent(blueTankGO.get());
 	redTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(redTankGO.get(), 0.f, 0.f, 0.f));
 	redTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		redTankGO.get(),
 		dae::ResourceManager::GetInstance().LoadTexture("RedTank.png")));
-	redTankGO->AddComponent<dae::RotateComponent>(std::make_unique<dae::RotateComponent>(redTankGO.get(), 50.f, -7.f));
 
-	scene.Add(std::move(emptyGO));
-	scene.Add(std::move(blueTankGO));
+	// Player 2 - Controller DPad controls (Controller 0)
+	input.BindCommand(0, dae::ControllerButton::DPadUp, dae::KeyState::Pressed,
+		std::make_unique<dae::MoveCommand>(redTankGO.get(), glm::vec3{ 0.f, -1.f, 0.f }, player1Speed * 2));
+	input.BindCommand(0, dae::ControllerButton::DPadDown, dae::KeyState::Pressed,
+		std::make_unique<dae::MoveCommand>(redTankGO.get(), glm::vec3{ 0.f, 1.f, 0.f }, player1Speed * 2));
+	input.BindCommand(0, dae::ControllerButton::DPadLeft, dae::KeyState::Pressed,
+		std::make_unique<dae::MoveCommand>(redTankGO.get(), glm::vec3{ -1.f, 0.f, 0.f }, player1Speed * 2));
+	input.BindCommand(0, dae::ControllerButton::DPadRight, dae::KeyState::Pressed,
+		std::make_unique<dae::MoveCommand>(redTankGO.get(), glm::vec3{ 1.f, 0.f, 0.f }, player1Speed * 2));
+
 	scene.Add(std::move(redTankGO));
-
-
-	// Benchmark Game Object
-	auto benchmarkGO = std::make_unique<dae::GameObject>();
-	benchmarkGO->AddComponent<dae::BenchmarkComponent>(std::make_unique<dae::BenchmarkComponent>(benchmarkGO.get()));
-	scene.Add(std::move(benchmarkGO));
 
 
 }

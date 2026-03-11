@@ -22,7 +22,7 @@ dae::InputManager::~InputManager()
 	delete[] m_PreviousKeyboardState;
 }
 
-bool dae::InputManager::ProcessInput()
+bool dae::InputManager::ProcessInput(float deltaTime)
 {
 	// Update controllers
 	for (auto& controller : m_Controllers)
@@ -51,7 +51,7 @@ bool dae::InputManager::ProcessInput()
 
 		if (shouldExecute && command)
 		{
-			command->Execute();
+			command->Execute(deltaTime);
 		}
 	}
 
@@ -77,7 +77,7 @@ bool dae::InputManager::ProcessInput()
 
 		if (shouldExecute && command)
 		{
-			command->Execute();
+			command->Execute(deltaTime);
 		}
 	}
 

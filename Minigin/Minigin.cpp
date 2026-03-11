@@ -107,7 +107,7 @@ void dae::Minigin::RunOneFrame()
 	m_LastTime = frameStartTime;
 	m_Lag += deltaTime;
 
-	m_quit = !InputManager::GetInstance().ProcessInput();
+	m_quit = !InputManager::GetInstance().ProcessInput(deltaTime);
 
 	while (m_Lag >= m_FixedTimeStep)
 	{

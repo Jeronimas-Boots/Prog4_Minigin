@@ -22,7 +22,7 @@ namespace dae
 		InputManager();
 		~InputManager();
 
-		bool ProcessInput();
+		bool ProcessInput(float deltaTime);
 
 		// Controller bindings
 		void BindCommand(unsigned int controllerIndex, ControllerButton button, KeyState keyState, std::unique_ptr<Command> command);
