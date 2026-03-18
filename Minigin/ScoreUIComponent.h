@@ -11,7 +11,6 @@ namespace dae
 	{
 	public:
 		ScoreUIComponent(GameObject* owner, ScoreComponent* scoreComponent);
-		~ScoreUIComponent() override;
 
 		void Notify(GameObject* object, unsigned int eventId) override;
 
