@@ -27,7 +27,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/TextObject.cpp
   Minigin/Texture2D.cpp
   Minigin/Transform.cpp
- "Minigin/MoveCommand.cpp" "Minigin/Component.h" "Minigin/FPSComponent.h" "Minigin/FPSComponent.cpp" "Minigin/TextComponent.h" "Minigin/TextComponent.cpp" "Minigin/TransformComponent.h" "Minigin/TransformComponent.cpp" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/RotateComponent.cpp" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/MoveCommand.cpp")
+ "Minigin/MoveCommand.cpp" "Minigin/Component.h" "Minigin/FPSComponent.h" "Minigin/FPSComponent.cpp" "Minigin/TextComponent.h" "Minigin/TextComponent.cpp" "Minigin/TransformComponent.h" "Minigin/TransformComponent.cpp" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/RotateComponent.cpp" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/MoveCommand.cpp" "Minigin/HealthComponent.h" "Minigin/HealthComponent.cpp" "Minigin/HealthComponent.h" "Minigin/HealthComponent.cpp")
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)

@@ -10,7 +10,7 @@ dae::MoveCommand::MoveCommand(GameObject* gameObject, const glm::vec3& direction
 
 void dae::MoveCommand::Execute(float deltaTime)
 {
-	TransformComponent* transform = GetGameObject()->GetComponent<TransformComponent>();
+	TransformComponent* transform = GetGameObject()->GetComponent<TransformComponent>(); // Dit niet op de hot code path.
 	if (transform)
 	{
 		const glm::vec3 currentpos = transform->GetLocalPosition();
