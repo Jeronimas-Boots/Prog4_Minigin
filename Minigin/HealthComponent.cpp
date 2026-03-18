@@ -1,4 +1,5 @@
 #include "HealthComponent.h"
+#include "GameObject.h"
 
 dae::HealthComponent::HealthComponent(GameObject* owner, int numLives)
 	: Component(owner)
@@ -20,5 +21,5 @@ void dae::HealthComponent::GainLife()
 
 void dae::HealthComponent::Die()
 {
-
+	//m_Owner->MarkForDeath();
 }
