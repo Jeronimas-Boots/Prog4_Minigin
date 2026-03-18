@@ -16,6 +16,7 @@
 #include <memory>
 #include "InputManager.h"
 #include "MoveCommand.h"
+#include "HealthComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -60,6 +61,7 @@ static void load()
 	
 	// Blue Tank
 	auto blueTankGO = std::make_unique<dae::GameObject>();
+	blueTankGO->AddComponent<dae::HealthComponent>(std::make_unique<dae::HealthComponent>(blueTankGO.get()));
 	blueTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankGO.get(), 200.f, 300.f, 0.f));
 	blueTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		blueTankGO.get(),
@@ -82,6 +84,7 @@ static void load()
 
 	// Red Tank
 	auto redTankGO = std::make_unique<dae::GameObject>();
+	redTankGO->AddComponent<dae::HealthComponent>(std::make_unique<dae::HealthComponent>(redTankGO.get()));
 	redTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(redTankGO.get(), 250.f, 250.f, 0.f));
 	redTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		redTankGO.get(),
