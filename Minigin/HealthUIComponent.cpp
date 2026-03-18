@@ -9,7 +9,10 @@ dae::HealthUIComponent::HealthUIComponent(GameObject* owner, HealthComponent* he
 	, m_HealthComponent(healthcomponent)
 {
 	if (m_HealthComponent)
+	{
 		m_HealthComponent->AddObserver(this);
+		Notify(owner, make_sdbm_hash("HealthChanged"));
+	}
 }
 
 dae::HealthUIComponent::~HealthUIComponent()

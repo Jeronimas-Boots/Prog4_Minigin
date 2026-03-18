@@ -7,6 +7,7 @@ dae::HealthComponent::HealthComponent(GameObject* owner, int numLives)
 	: Component(owner)
 	, m_Lives(numLives)
 {
+	//NotifyObservers(make_sdbm_hash("HealthChanged"));
 }
 
 void dae::HealthComponent::LoseLife()

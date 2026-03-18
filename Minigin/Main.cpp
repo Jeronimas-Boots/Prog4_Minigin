@@ -16,7 +16,9 @@
 #include <memory>
 #include "InputManager.h"
 #include "MoveCommand.h"
+#include "DamageCommand.h"
 #include "HealthComponent.h"
+#include "HealthUIComponent.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -79,8 +81,20 @@ static void load()
 		std::make_unique<dae::MoveCommand>(blueTankGO.get(), glm::vec3{ -1.f, 0.f, 0.f }, player1Speed));
 	input.BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed,
 		std::make_unique<dae::MoveCommand>(blueTankGO.get(), glm::vec3{ 1.f, 0.f, 0.f }, player1Speed));
+	input.BindCommand(SDL_SCANCODE_C, dae::KeyState::Up,
+		std::make_unique<dae::DamageCommand>(blueTankGO.get()));
 
+	// BlueTankUI
+	auto blueTankHPUI = std::make_unique<dae::GameObject>();
+	blueTankHPUI->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankHPUI.get(), 0.f, 140.f));
+	blueTankHPUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(blueTankHPUI.get(), "Lives: 0", SDL_Color{ 0, 0, 255, 255 }, fontSmall));
+	blueTankHPUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(blueTankHPUI.get(), nullptr));
+	blueTankHPUI->AddComponent<dae::HealthUIComponent>(std::make_unique<dae::HealthUIComponent>(blueTankHPUI.get(), blueTankGO->GetComponent<dae::HealthComponent>()));
+	
+
+	scene.Add(std::move(blueTankHPUI));
 	scene.Add(std::move(blueTankGO));
+
 
 	// Red Tank
 	auto redTankGO = std::make_unique<dae::GameObject>();
@@ -100,6 +114,14 @@ static void load()
 	input.BindCommand(0, dae::ControllerButton::DPadRight, dae::KeyState::Pressed,
 		std::make_unique<dae::MoveCommand>(redTankGO.get(), glm::vec3{ 1.f, 0.f, 0.f }, player1Speed * 2));
 
+	// BlueTankUI
+	auto redTankHPUI = std::make_unique<dae::GameObject>();
+	redTankHPUI->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(redTankHPUI.get(), 0.f, 180.f));
+	redTankHPUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(redTankHPUI.get(), "Lives: 0", SDL_Color{ 255, 0, 0, 255 }, fontSmall));
+	redTankHPUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(redTankHPUI.get(), nullptr));
+	redTankHPUI->AddComponent<dae::HealthUIComponent>(std::make_unique<dae::HealthUIComponent>(redTankHPUI.get(), redTankGO->GetComponent<dae::HealthComponent>()));
+
+	scene.Add(std::move(redTankHPUI));
 	scene.Add(std::move(redTankGO));
 
 
