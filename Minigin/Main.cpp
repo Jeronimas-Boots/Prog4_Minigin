@@ -34,7 +34,7 @@ static void load()
 	scene.Add(std::move(backgroundGO));
 
 	// FPS GameObject
-	auto fontSmall = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 26);
+	auto fontSmall = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 	auto fpsGO = std::make_unique<dae::GameObject>();
 	fpsGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(fpsGO.get(), 10.f, 10.f, 0.f));
 	fpsGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(fpsGO.get(), nullptr));

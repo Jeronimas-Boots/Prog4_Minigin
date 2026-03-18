@@ -24,7 +24,7 @@ void dae::HealthUIComponent::Notify(GameObject* object, unsigned int eventId)
 	{
 	case make_sdbm_hash("HealthChanged"):
 		if (!m_TextComponent)
-			m_TextComponent = GetOwner()->GetComponent<dae::TextComponent>();
+			m_TextComponent = object->GetComponent<dae::TextComponent>();
 
 		if (m_TextComponent && m_HealthComponent)
 			m_TextComponent->SetText("Lives: " + std::to_string(m_HealthComponent->GetLives()));
