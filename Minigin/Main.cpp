@@ -19,6 +19,9 @@
 #include "DamageCommand.h"
 #include "HealthComponent.h"
 #include "HealthUIComponent.h"
+#include "ScoreUIComponent.h"
+#include "ScoreComponent.h"
+#include "ScoreCommand.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -64,6 +67,7 @@ static void load()
 	// Blue Tank
 	auto blueTankGO = std::make_unique<dae::GameObject>();
 	blueTankGO->AddComponent<dae::HealthComponent>(std::make_unique<dae::HealthComponent>(blueTankGO.get()));
+	blueTankGO->AddComponent<dae::ScoreComponent>(std::make_unique<dae::ScoreComponent>(blueTankGO.get()));
 	blueTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankGO.get(), 200.f, 300.f, 0.f));
 	blueTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		blueTankGO.get(),
@@ -83,15 +87,26 @@ static void load()
 		std::make_unique<dae::MoveCommand>(blueTankGO.get(), glm::vec3{ 1.f, 0.f, 0.f }, player1Speed));
 	input.BindCommand(SDL_SCANCODE_C, dae::KeyState::Up,
 		std::make_unique<dae::DamageCommand>(blueTankGO.get()));
+	input.BindCommand(SDL_SCANCODE_Z, dae::KeyState::Up,
+		std::make_unique<dae::ScoreCommand>(blueTankGO.get(), false));
+	input.BindCommand(SDL_SCANCODE_X, dae::KeyState::Up,
+		std::make_unique<dae::ScoreCommand>(blueTankGO.get(), true));
 
-	// BlueTankUI
+	// BlueTank health UI
 	auto blueTankHPUI = std::make_unique<dae::GameObject>();
 	blueTankHPUI->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankHPUI.get(), 0.f, 140.f));
 	blueTankHPUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(blueTankHPUI.get(), "Lives: 0", SDL_Color{ 0, 0, 255, 255 }, fontSmall));
 	blueTankHPUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(blueTankHPUI.get(), nullptr));
 	blueTankHPUI->AddComponent<dae::HealthUIComponent>(std::make_unique<dae::HealthUIComponent>(blueTankHPUI.get(), blueTankGO->GetComponent<dae::HealthComponent>()));
 	
+	// BlueTank score UI
+	auto blueTankScoreUI = std::make_unique<dae::GameObject>();
+	blueTankScoreUI->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankScoreUI.get(), 0.f, 160.f));
+	blueTankScoreUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(blueTankScoreUI.get(), "Score: 0", SDL_Color{ 0, 0, 255, 255 }, fontSmall));
+	blueTankScoreUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(blueTankScoreUI.get(), nullptr));
+	blueTankScoreUI->AddComponent<dae::ScoreUIComponent>(std::make_unique<dae::ScoreUIComponent>(blueTankScoreUI.get(), blueTankGO->GetComponent<dae::ScoreComponent>()));
 
+	scene.Add(std::move(blueTankScoreUI));
 	scene.Add(std::move(blueTankHPUI));
 	scene.Add(std::move(blueTankGO));
 
@@ -99,6 +114,7 @@ static void load()
 	// Red Tank
 	auto redTankGO = std::make_unique<dae::GameObject>();
 	redTankGO->AddComponent<dae::HealthComponent>(std::make_unique<dae::HealthComponent>(redTankGO.get()));
+	redTankGO->AddComponent<dae::ScoreComponent>(std::make_unique<dae::ScoreComponent>(redTankGO.get()));
 	redTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(redTankGO.get(), 250.f, 250.f, 0.f));
 	redTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		redTankGO.get(),
@@ -113,17 +129,47 @@ static void load()
 		std::make_unique<dae::MoveCommand>(redTankGO.get(), glm::vec3{ -1.f, 0.f, 0.f }, player1Speed * 2));
 	input.BindCommand(0, dae::ControllerButton::DPadRight, dae::KeyState::Pressed,
 		std::make_unique<dae::MoveCommand>(redTankGO.get(), glm::vec3{ 1.f, 0.f, 0.f }, player1Speed * 2));
+	input.BindCommand(0, dae::ControllerButton::ButtonX, dae::KeyState::Up,
+		std::make_unique<dae::DamageCommand>(redTankGO.get()));
+	input.BindCommand(0, dae::ControllerButton::ButtonA, dae::KeyState::Up,
+		std::make_unique<dae::ScoreCommand>(redTankGO.get(), true));
+	input.BindCommand(0, dae::ControllerButton::ButtonB, dae::KeyState::Up,
+		std::make_unique<dae::ScoreCommand>(redTankGO.get(), false));
 
-	// BlueTankUI
+	// redTankUI
 	auto redTankHPUI = std::make_unique<dae::GameObject>();
 	redTankHPUI->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(redTankHPUI.get(), 0.f, 180.f));
 	redTankHPUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(redTankHPUI.get(), "Lives: 0", SDL_Color{ 255, 0, 0, 255 }, fontSmall));
 	redTankHPUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(redTankHPUI.get(), nullptr));
 	redTankHPUI->AddComponent<dae::HealthUIComponent>(std::make_unique<dae::HealthUIComponent>(redTankHPUI.get(), redTankGO->GetComponent<dae::HealthComponent>()));
 
+	// RedTank score UI
+	auto redTankScoreUI = std::make_unique<dae::GameObject>();
+	redTankScoreUI->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(redTankScoreUI.get(), 0.f, 200.f));
+	redTankScoreUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(redTankScoreUI.get(), "Score: 0", SDL_Color{ 255, 0, 0, 255 }, fontSmall));
+	redTankScoreUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(redTankScoreUI.get(), nullptr));
+	redTankScoreUI->AddComponent<dae::ScoreUIComponent>(std::make_unique<dae::ScoreUIComponent>(redTankScoreUI.get(), redTankGO->GetComponent<dae::ScoreComponent>()));
+
+	scene.Add(std::move(redTankScoreUI));
 	scene.Add(std::move(redTankHPUI));
 	scene.Add(std::move(redTankGO));
 
+
+	// Instructions GameObject controller
+	auto instructionsRedGO = std::make_unique<dae::GameObject>();
+	instructionsRedGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(instructionsRedGO.get(), 0.f, 80.f));
+	instructionsRedGO->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(instructionsRedGO.get(), "Use the D-Pad to move RedTank, X to inflict damage, A and B to get Kills", SDL_Color{ 255, 0, 0, 255 }, fontSmall));
+	instructionsRedGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(instructionsRedGO.get(), nullptr));
+
+	scene.Add(std::move(instructionsRedGO));
+
+	// Instructions GameObject keyboard
+	auto instructionsBlueGO = std::make_unique<dae::GameObject>();
+	instructionsBlueGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(instructionsBlueGO.get(), 0.f, 100.f));
+	instructionsBlueGO->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(instructionsBlueGO.get(), "Use WASD to move BlueTank, C to inflict damage, Z and X to get Kills", SDL_Color{ 0, 0, 255, 255 }, fontSmall));
+	instructionsBlueGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(instructionsBlueGO.get(), nullptr));
+
+	scene.Add(std::move(instructionsBlueGO));
 
 }
 

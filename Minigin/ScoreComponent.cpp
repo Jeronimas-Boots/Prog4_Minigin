@@ -1,4 +1,5 @@
 #include "ScoreComponent.h"
+#include "EventID.h"
 
 dae::ScoreComponent::ScoreComponent(GameObject* owner)
 	: Component(owner)
@@ -9,11 +10,13 @@ dae::ScoreComponent::ScoreComponent(GameObject* owner)
 void dae::ScoreComponent::GetKill()
 {
 	m_Score += 10;
+	NotifyObservers(make_sdbm_hash("ScoreChanged"));
 }
 
 void dae::ScoreComponent::GetMegaKill()
 {
 	m_Score += 100;
+	NotifyObservers(make_sdbm_hash("ScoreChanged"));
 }
 
 void dae::ScoreComponent::AddObserver(Observer* observer)
