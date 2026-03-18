@@ -15,12 +15,6 @@ dae::HealthUIComponent::HealthUIComponent(GameObject* owner, HealthComponent* he
 	}
 }
 
-dae::HealthUIComponent::~HealthUIComponent()
-{
-	if (m_HealthComponent)
-		m_HealthComponent->RemoveObserver(this);
-}
-
 void dae::HealthUIComponent::Notify(GameObject* object, unsigned int eventId)
 {
 	switch (eventId)

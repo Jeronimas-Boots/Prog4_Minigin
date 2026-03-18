@@ -30,7 +30,7 @@ void dae::HealthComponent::GainLife()
 void dae::HealthComponent::Die()
 {
 	NotifyObservers(make_sdbm_hash("PlayerDied"));
-	//GetOwner()->MarkForDeath();
+	GetOwner()->MarkForDeath();
 }
 
 void dae::HealthComponent::AddObserver(Observer* observer)

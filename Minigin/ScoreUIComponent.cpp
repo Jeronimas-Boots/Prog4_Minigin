@@ -16,8 +16,8 @@ dae::ScoreUIComponent::ScoreUIComponent(GameObject* owner, ScoreComponent* score
 
 dae::ScoreUIComponent::~ScoreUIComponent()
 {
-	if (m_ScoreComponent)
-		m_ScoreComponent->RemoveObserver(this);
+	//if (m_ScoreComponent)
+	//	m_ScoreComponent->RemoveObserver(this);
 }
 
 void dae::ScoreUIComponent::Notify(GameObject* object, unsigned int eventId)

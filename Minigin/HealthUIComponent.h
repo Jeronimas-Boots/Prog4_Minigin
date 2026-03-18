@@ -11,7 +11,6 @@ namespace dae
 	{
 	public:
 		HealthUIComponent(GameObject* owner, HealthComponent* healthcomponent);
-		~HealthUIComponent() override;
 
 		void Notify(GameObject* object, unsigned int eventId) override;
 
