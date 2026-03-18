@@ -1,5 +1,7 @@
 #pragma once
 #include "Component.h"
+#include "Observer.h"
+#include <vector>
 
 namespace dae
 {
@@ -12,8 +14,13 @@ namespace dae
 		void GainLife();
 		void Die();
 
+		void AddObserver(Observer* observer);
+		void RemoveObserver(Observer* observer);
+
+	protected:
+		void NotifyObservers(unsigned int eventId);
 	private:
 		int m_Lives;
+		std::vector<Observer*> m_Observers;
 	};
-
 }
