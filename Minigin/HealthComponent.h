@@ -5,7 +5,7 @@
 
 namespace dae
 {
-	class HealthComponent : public Component
+	class HealthComponent final : public Component
 	{
 	public:
 		HealthComponent(GameObject* owner, int numLives = 3);
@@ -13,6 +13,8 @@ namespace dae
 		void LoseLife();
 		void GainLife();
 		void Die();
+
+		int GetLives() const { return m_Lives; };
 
 		void AddObserver(Observer* observer);
 		void RemoveObserver(Observer* observer);
