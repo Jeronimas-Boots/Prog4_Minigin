@@ -27,17 +27,17 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-// Achievement array which will hold data about the achievements and their state
-Achievement_t g_Achievements[] =
-{
-	_ACH_ID(ACH_WIN_ONE_GAME, "Winner"),
-	_ACH_ID(ACH_WIN_100_GAMES, "Champion"),
-	_ACH_ID(ACH_TRAVEL_FAR_ACCUM, "Interstellar"),
-	_ACH_ID(ACH_TRAVEL_FAR_SINGLE, "Orbiter"),
-};
-
-// Global access to Achievements object
-CSteamAchievements* g_SteamAchievements = NULL;
+//// Achievement array which will hold data about the achievements and their state
+//Achievement_t g_Achievements[] =
+//{
+//	_ACH_ID(ACH_WIN_ONE_GAME, "Winner"),
+//	_ACH_ID(ACH_WIN_100_GAMES, "Champion"),
+//	_ACH_ID(ACH_TRAVEL_FAR_ACCUM, "Interstellar"),
+//	_ACH_ID(ACH_TRAVEL_FAR_SINGLE, "Orbiter"),
+//};
+//
+//// Global access to Achievements object
+//CSteamAchievements* g_SteamAchievements = NULL;
 
 static void load()
 {
@@ -197,14 +197,14 @@ int main(int, char*[]) {
 	dae::Minigin engine(data_location);
 
 #if USE_STEAMWORKS
-	g_SteamAchievements = new CSteamAchievements(g_Achievements, 4);
+	//g_SteamAchievements = new CSteamAchievements(g_Achievements, 4);
 #endif // USE_STEAMWORKS
 
 	engine.Run(load);
 
 #if USE_STEAMWORKS
-	if (g_SteamAchievements)
-		delete g_SteamAchievements;
+	//if (g_SteamAchievements)
+	//	delete g_SteamAchievements;
 #endif // USE_STEAMWORKS
 
     return 0;
