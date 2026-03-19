@@ -23,21 +23,22 @@
 #include "ScoreComponent.h"
 #include "ScoreCommand.h"
 #include "Achievements.h"
+#include "AchievementObserver.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
 
-//// Achievement array which will hold data about the achievements and their state
-//Achievement_t g_Achievements[] =
-//{
-//	_ACH_ID(ACH_WIN_ONE_GAME, "Winner"),
-//	_ACH_ID(ACH_WIN_100_GAMES, "Champion"),
-//	_ACH_ID(ACH_TRAVEL_FAR_ACCUM, "Interstellar"),
-//	_ACH_ID(ACH_TRAVEL_FAR_SINGLE, "Orbiter"),
-//};
-//
-//// Global access to Achievements object
-//CSteamAchievements* g_SteamAchievements = NULL;
+// Achievement array which will hold data about the achievements and their state
+Achievement_t g_Achievements[] =
+{
+	_ACH_ID(ACH_WIN_ONE_GAME, "Winner"),
+	_ACH_ID(ACH_WIN_100_GAMES, "Champion"),
+	_ACH_ID(ACH_TRAVEL_FAR_ACCUM, "Interstellar"),
+	_ACH_ID(ACH_TRAVEL_FAR_SINGLE, "Orbiter"),
+};
+
+// Global access to Achievements object
+CSteamAchievements* g_SteamAchievements = NULL;
 
 static void load()
 {
@@ -82,6 +83,7 @@ static void load()
 	blueTankGO->AddComponent<dae::HealthComponent>(std::make_unique<dae::HealthComponent>(blueTankGO.get()));
 	blueTankGO->AddComponent<dae::ScoreComponent>(std::make_unique<dae::ScoreComponent>(blueTankGO.get()));
 	blueTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankGO.get(), 200.f, 300.f, 0.f));
+	blueTankGO->AddComponent<dae::AchievementObserver>(std::make_unique<dae::AchievementObserver>(blueTankGO.get(), g_SteamAchievements));
 	blueTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		blueTankGO.get(),
 		dae::ResourceManager::GetInstance().LoadTexture("BlueTank.png")));
@@ -197,14 +199,14 @@ int main(int, char*[]) {
 	dae::Minigin engine(data_location);
 
 #if USE_STEAMWORKS
-	//g_SteamAchievements = new CSteamAchievements(g_Achievements, 4);
+	g_SteamAchievements = new CSteamAchievements(g_Achievements, 4);
 #endif // USE_STEAMWORKS
 
 	engine.Run(load);
 
 #if USE_STEAMWORKS
-	//if (g_SteamAchievements)
-	//	delete g_SteamAchievements;
+	if (g_SteamAchievements)
+		delete g_SteamAchievements;
 #endif // USE_STEAMWORKS
 
     return 0;

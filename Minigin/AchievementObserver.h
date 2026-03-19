@@ -1,25 +1,23 @@
 #pragma once
+#include "Component.h"
 #include "Observer.h"
-#include "EventID.h"
-#include "Achievements.h"
 
 class CSteamAchievements;
 namespace dae
 {
-	class AchievementObserver final : public Observer
+	class ScoreComponent;
+	class GameObject;
+
+	class AchievementObserver final : public Component, public Observer
 	{
 	public:
-		void Notify(GameObject* gameObject, unsigned int eventId) override
-		{
-			switch (eventId)
-			{
-			default:
-				break;
-			}
-		}
+		AchievementObserver(GameObject* owner, CSteamAchievements* pSteamAchievements);
+
+		void Notify(GameObject* gameObject, unsigned int eventId) override;
 
 	private:
-
+		CSteamAchievements* m_SteamAchievements;
+		ScoreComponent* m_ScoreComp;
 	};
 
 }
