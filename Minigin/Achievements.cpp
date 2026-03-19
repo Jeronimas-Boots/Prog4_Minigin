@@ -1,5 +1,5 @@
 #include "Achievements.h"
-
+#include <Windows.h>
 
 CSteamAchievements::CSteamAchievements(Achievement_t* Achievements, int NumAchievements) :
 	m_iAppID(0),
