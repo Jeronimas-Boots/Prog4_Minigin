@@ -1,8 +1,6 @@
 #pragma once
-#ifdef USE_STEAMWORKS
 #include <steam_api.h>
-#endif // USE_STEAMWORKS
-
+#include <Windows.h>
 
 #define _ACH_ID( id, name ) { id, #id, name, "", 0, 0 }
 struct Achievement_t

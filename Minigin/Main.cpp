@@ -22,8 +22,11 @@
 #include "ScoreUIComponent.h"
 #include "ScoreComponent.h"
 #include "ScoreCommand.h"
+
+#ifdef USE_STEAMWORKS
 #include "Achievements.h"
 #include "AchievementObserver.h"
+#endif // USE_STEAMWORKS
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -83,7 +86,10 @@ static void load()
 	blueTankGO->AddComponent<dae::HealthComponent>(std::make_unique<dae::HealthComponent>(blueTankGO.get()));
 	blueTankGO->AddComponent<dae::ScoreComponent>(std::make_unique<dae::ScoreComponent>(blueTankGO.get()));
 	blueTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(blueTankGO.get(), 200.f, 300.f, 0.f));
+#ifdef USE_STEAMWORKS
 	blueTankGO->AddComponent<dae::AchievementObserver>(std::make_unique<dae::AchievementObserver>(blueTankGO.get(), g_SteamAchievements));
+#endif // USE_STEAMWORKS
+
 	blueTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
 		blueTankGO.get(),
 		dae::ResourceManager::GetInstance().LoadTexture("BlueTank.png")));
