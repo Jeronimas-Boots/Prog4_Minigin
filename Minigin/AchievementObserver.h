@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 #include "Observer.h"
+#ifdef USE_STEAMWORKS
+
 
 class CSteamAchievements;
 namespace dae
@@ -21,3 +23,4 @@ namespace dae
 	};
 
 }
+#endif // USE_STEAMWORKS

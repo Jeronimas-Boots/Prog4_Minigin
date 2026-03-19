@@ -2,7 +2,7 @@
 #ifdef USE_STEAMWORKS
 #include <steam_api.h>
 #include <Windows.h>
-#endif // USE_STEAMWORKS
+
 
 #define _ACH_ID( id, name ) { id, #id, name, "", 0, 0 }
 struct Achievement_t
@@ -48,3 +48,4 @@ public:
 	STEAM_CALLBACK(CSteamAchievements, OnAchievementStored,
 		UserAchievementStored_t, m_CallbackAchievementStored);
 };
+#endif // USE_STEAMWORKS
