@@ -64,11 +64,6 @@ void PrintSDLVersion()
 
 dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 {
-#if USE_STEAMWORKS
-	if (!SteamAPI_Init())
-		throw std::runtime_error(std::string("Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed)."));
-	
-#endif
 	PrintSDLVersion();
 	
 	if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
@@ -94,9 +89,6 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 
 dae::Minigin::~Minigin()
 {
-#if USE_STEAMWORKS
-	SteamAPI_Shutdown();
-#endif
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
@@ -121,10 +113,6 @@ void dae::Minigin::RunOneFrame()
 	const float deltaTime = std::chrono::duration<float>(frameStartTime - m_LastTime).count();
 	m_LastTime = frameStartTime;
 	m_Lag += deltaTime;
-
-#if USE_STEAMWORKS
-	SteamAPI_RunCallbacks();
-#endif 
 
 	m_quit = !InputManager::GetInstance().ProcessInput(deltaTime);
 

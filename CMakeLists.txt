@@ -14,11 +14,11 @@ else()
 endif()
 
 # list source files here
-add_executable(${TARGET_NAME} ${TARGET_PARAM}
+add_library(${TARGET_NAME} STATIC
   Minigin/Font.cpp
   Minigin/GameObject.cpp
   Minigin/InputManager.cpp
-  Minigin/Main.cpp
+  # Minigin/Main.cpp
   Minigin/Minigin.cpp
   Minigin/Renderer.cpp
   Minigin/ResourceManager.cpp
@@ -27,7 +27,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/TextObject.cpp
   Minigin/Texture2D.cpp
   Minigin/Transform.cpp
- "Minigin/MoveCommand.cpp" "Minigin/Component.h" "Minigin/FPSComponent.h" "Minigin/FPSComponent.cpp" "Minigin/TextComponent.h" "Minigin/TextComponent.cpp" "Minigin/TransformComponent.h" "Minigin/TransformComponent.cpp" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/RotateComponent.cpp" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/MoveCommand.cpp" "Minigin/HealthComponent.h" "Minigin/HealthComponent.cpp" "Minigin/EventID.h" "Minigin/Observer.h" "Minigin/HealthUIComponent.h" "Minigin/HealthUIComponent.cpp" "Minigin/DamageCommand.h" "Minigin/ScoreComponent.h" "Minigin/ScoreComponent.cpp" "Minigin/ScoreUIComponent.h" "Minigin/ScoreUIComponent.cpp" "Minigin/ScoreCommand.h" "Minigin/Achievements.h" "Minigin/AchievementObserver.h"  "Minigin/AchievementObserver.cpp" "Minigin/Achievements.cpp")
+ "Minigin/MoveCommand.cpp" "Minigin/Component.h" "Minigin/FPSComponent.h" "Minigin/FPSComponent.cpp" "Minigin/TextComponent.h" "Minigin/TextComponent.cpp" "Minigin/TransformComponent.h" "Minigin/TransformComponent.cpp" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/RotateComponent.cpp" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/MoveCommand.cpp" "Minigin/HealthComponent.h" "Minigin/HealthComponent.cpp" "Minigin/EventID.h" "Minigin/Observer.h" "Minigin/HealthUIComponent.h" "Minigin/HealthUIComponent.cpp" "Minigin/DamageCommand.h" "Minigin/ScoreComponent.h" "Minigin/ScoreComponent.cpp" "Minigin/ScoreUIComponent.h" "Minigin/ScoreUIComponent.cpp" "Minigin/ScoreCommand.h"     )
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
@@ -133,10 +133,6 @@ if (WIN32)
   find_package(VLD CONFIG)
 endif()
 
-# Add steam if available
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/steam")
-find_package(Steamworks QUIET)
-
 target_include_directories("${TARGET_NAME}" PUBLIC 
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${glm_SOURCE_DIR}
@@ -203,17 +199,6 @@ elseif(WIN32)
     )
   endforeach()
 
-  if(Steamworks_FOUND)
-    target_link_libraries("${TARGET_NAME}" PUBLIC Steamworks::Steamworks)
-    target_compile_definitions(${TARGET_NAME} PRIVATE USE_STEAMWORKS)
-    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-      COMMAND "${CMAKE_COMMAND}" -E copy "${Steamworks_RUNTIME_DLL}" "$<TARGET_FILE_DIR:${TARGET_NAME}>")
-    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-      COMMAND "${CMAKE_COMMAND}" -E echo "480" > "$<TARGET_FILE_DIR:${TARGET_NAME}>/steam_appid.txt"
-      COMMENT "Generating steam_appid.txt"
-    )
-  endif()
-
   add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Data"
   )
@@ -231,37 +216,22 @@ elseif(APPLE)
     COMMAND install_name_tool -change "@rpath/libSDL3.0.dylib" "@executable_path/../Frameworks/libSDL3.0.dylib" "$<TARGET_FILE:${TARGET_NAME}>"
   )
 
-  if(Steamworks_FOUND)
-    target_link_libraries("${TARGET_NAME}" PUBLIC Steamworks::Steamworks)
-    target_compile_definitions(${TARGET_NAME} PRIVATE USE_STEAMWORKS)
-    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-      COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${Steamworks_LIBRARIES}" "$<TARGET_BUNDLE_DIR:${TARGET_NAME}>/Contents/Frameworks/"
-    )
-    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-      COMMAND "${CMAKE_COMMAND}" -E echo "480" > "$<TARGET_FILE_DIR:${TARGET_NAME}>/steam_appid.txt"
-      COMMENT "Generating steam_appid.txt"
-    )
-  endif()
-
   # Copy Data folder to output directory after build
   add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Data"
   )
 else()
- if(Steamworks_FOUND)
-    target_link_libraries("${TARGET_NAME}" PUBLIC Steamworks::Steamworks)
-    target_compile_definitions(${TARGET_NAME} PRIVATE USE_STEAMWORKS)
-    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-      COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${Steamworks_LIBRARIES}" "$<TARGET_FILE_DIR:${TARGET_NAME}>"
-    )
-    add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-      COMMAND "${CMAKE_COMMAND}" -E echo "480" > "$<TARGET_FILE_DIR:${TARGET_NAME}>/steam_appid.txt"
-      COMMENT "Generating steam_appid.txt"
-    )
-  endif()
 
   # Copy Data folder to output directory after build
   add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Data"
   )
 endif()
+
+
+
+
+# Executable for the game
+add_executable(Tron-BattleTanks WIN32 Minigin/Main.cpp)
+
+target_link_libraries(Tron-BattleTanks PRIVATE ${TARGET_NAME})
