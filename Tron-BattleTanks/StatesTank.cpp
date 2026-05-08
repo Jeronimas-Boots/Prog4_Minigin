@@ -1,6 +1,11 @@
 #include "StatesTank.h"
 
-std::unique_ptr<tron::TankState> tron::TankShootState::Update(Tank& tank)
+void tron::TankShootState::OnEnter(TankStateComponent& stateComponent)
+{
+    stateComponent.ChangeToShootVisuals();
+}
+
+std::unique_ptr<tron::TankState> tron::TankShootState::Update(TankStateComponent& tank)
 {
     tank.Shoot();
 
@@ -12,7 +17,12 @@ std::unique_ptr<tron::TankState> tron::TankShootState::Update(Tank& tank)
     return nullptr;
 }
 
-std::unique_ptr<tron::TankState> tron::TankWanderState::Update(Tank& tank)
+void tron::TankWanderState::OnEnter(TankStateComponent& stateComponent)
+{
+    stateComponent.ChangeToWanderVisuals();
+}
+
+std::unique_ptr<tron::TankState> tron::TankWanderState::Update(TankStateComponent& tank)
 {
     tank.Wander();
 

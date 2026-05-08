@@ -22,6 +22,9 @@
 #include "ScoreUIComponent.h"
 #include "ScoreComponent.h"
 #include "ScoreCommand.h"
+#include "TankStateComponent.h"
+#include "ToggleTargetCommand.h"
+#include "StatesTank.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -172,6 +175,31 @@ static void load()
 
 	scene.Add(std::move(instructionsBlueGO));
 
+
+	// Enemy AI Tank
+	auto enemyTankGO = std::make_unique<dae::GameObject>();
+	enemyTankGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(enemyTankGO.get(), 400.f, 250.f, 0.f));
+	enemyTankGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
+		enemyTankGO.get(),
+		dae::ResourceManager::GetInstance().LoadTexture("PinkTank.png"))); // Reuse texture for now
+
+	
+	enemyTankGO->AddComponent<tron::TankStateComponent>(
+		std::make_unique<tron::TankStateComponent>(enemyTankGO.get(), std::make_unique<tron::TankWanderState>())
+	);
+
+	// Bind 'T' to toggle the mock target in range to test state transitions
+	input.BindCommand(SDL_SCANCODE_T, dae::KeyState::Up,
+		std::make_unique<tron::ToggleTargetCommand>(enemyTankGO->GetComponent<tron::TankStateComponent>()));
+
+	auto instructionsAIGO = std::make_unique<dae::GameObject>();
+	instructionsAIGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(instructionsAIGO.get(), 0.f, 120.f));
+	instructionsAIGO->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(instructionsAIGO.get(), "Press 'T' to toggle Enemy Tank State (wander/shoot) currently just changes color :/", SDL_Color{ 0, 255, 0, 255 }, fontSmall));
+	instructionsAIGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(instructionsAIGO.get(), nullptr));
+	scene.Add(std::move(instructionsAIGO));
+
+	scene.Add(std::move(enemyTankGO));
+
 }
 
 int main(int, char*[]) {
@@ -185,11 +213,6 @@ int main(int, char*[]) {
 	dae::Minigin engine(data_location);
 
 	engine.Run(load);
-
-#if USE_STEAMWORKS
-	if (g_SteamAchievements)
-		delete g_SteamAchievements;
-#endif // USE_STEAMWORKS
 
     return 0;
 }

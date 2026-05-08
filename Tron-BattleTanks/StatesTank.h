@@ -1,17 +1,20 @@
 #pragma once
 #include "TankState.h"
-#include "Tank.h"
+#include "TankStateComponent.h"
 
 namespace tron
 {
 	class TankShootState : public TankState
 	{
 	public:
-		std::unique_ptr<TankState> Update(Tank& tank) override;
+		void OnEnter(TankStateComponent& stateComponent) override;
+		std::unique_ptr<TankState> Update(TankStateComponent& tank) override;
 	};
 
 	class TankWanderState : public TankState
 	{
-		std::unique_ptr<TankState> Update(Tank& tank) override;
+	public:
+		void OnEnter(TankStateComponent& stateComponent) override;
+		std::unique_ptr<TankState> Update(TankStateComponent& tank) override;
 	};
 }

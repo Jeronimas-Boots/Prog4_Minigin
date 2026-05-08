@@ -165,9 +165,9 @@ endif()
 add_executable(Tron-BattleTanks WIN32 
 "Tron-BattleTanks/Main.cpp" 
 "Tron-BattleTanks/TankState.h" 
-"Tron-BattleTanks/Tank.h" 
-"Tron-BattleTanks/Tank.cpp"
- "Tron-BattleTanks/StatesTank.cpp")
+"Tron-BattleTanks/TankStateComponent.h" 
+"Tron-BattleTanks/TankStateComponent.cpp"
+ "Tron-BattleTanks/StatesTank.cpp" )
 target_link_libraries(Tron-BattleTanks PRIVATE ${TARGET_NAME})
 
 if(EMSCRIPTEN)
