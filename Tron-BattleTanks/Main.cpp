@@ -6,32 +6,58 @@
 #endif
 
 #include "Minigin.h"
-#include "SceneManager.h"
-#include "ResourceManager.h"
-#include "Scene.h"
-#include "TransformComponent.h"
-#include "RenderComponent.h"
-#include "TextComponent.h"
-#include "FPSComponent.h"
+//#include "SceneManager.h"
+//#include "ResourceManager.h"
+//#include "Scene.h"
+//#include "TransformComponent.h"
+//#include "RenderComponent.h"
+//#include "TextComponent.h"
+//#include "FPSComponent.h"
 #include <memory>
-#include "InputManager.h"
-#include "MoveCommand.h"
-#include "DamageCommand.h"
-#include "HealthComponent.h"
-#include "HealthUIComponent.h"
-#include "ScoreUIComponent.h"
-#include "ScoreComponent.h"
-#include "ScoreCommand.h"
-#include "TankStateComponent.h"
-#include "ToggleTargetCommand.h"
-#include "StatesTank.h"
+//#include "InputManager.h"
+//#include "MoveCommand.h"
+//#include "DamageCommand.h"
+//#include "HealthComponent.h"
+//#include "HealthUIComponent.h"
+//#include "ScoreUIComponent.h"
+//#include "ScoreComponent.h"
+//#include "ScoreCommand.h"
+//#include "TankStateComponent.h"
+//#include "ToggleTargetCommand.h"
+//#include "StatesTank.h"
+
+#include "LevelManager.h"
+#include "Level0.h"
+
+//#include "ServiceLocator.h"
+//#include "SDL_MixerSoundSystem.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
 
 static void load()
 {
-	auto& scene = dae::SceneManager::GetInstance().CreateScene();
+	//dae::ServiceLocator::RegisterSoundSystem(
+	//	std::make_unique<dae::SDL_MixerSoundSystem>()
+	//);
+	//dae::ServiceLocator::GetSoundSystem().Play("Data/Sounds/End of Line.mp3", 0.5f, -1);
+
+	tron::LevelManager levelManager;
+	levelManager.RegisterLevel(std::make_unique<tron::Level0>());
+	// levelManager.RegisterLevel(std::make_unique<tron::Level02>());
+
+	levelManager.LoadLevel(0);
+
+	/*auto& scene = dae::SceneManager::GetInstance().CreateScene();
+
+	////Sound test
+	//// Register the sound system
+	//dae::ServiceLocator::RegisterSoundSystem(
+	//	std::make_unique<dae::SDL_MixerSoundSystem>()
+	//);
+
+	//// Play background music (put your .wav/.ogg file in the Data folder)
+	//dae::ServiceLocator::GetSoundSystem().Play("Data/Sounds/End of Line.mp3", 0.5f, -1);
 
 	// Background GameObject
 	auto backgroundGO = std::make_unique<dae::GameObject>();
@@ -198,8 +224,7 @@ static void load()
 	instructionsAIGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(instructionsAIGO.get(), nullptr));
 	scene.Add(std::move(instructionsAIGO));
 
-	scene.Add(std::move(enemyTankGO));
-
+	scene.Add(std::move(enemyTankGO));*/
 }
 
 int main(int, char*[]) {

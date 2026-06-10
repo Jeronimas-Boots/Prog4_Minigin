@@ -27,7 +27,7 @@ add_library(${TARGET_NAME} STATIC
   Minigin/TextObject.cpp
   Minigin/Texture2D.cpp
   Minigin/Transform.cpp
- "Minigin/MoveCommand.cpp" "Minigin/Component.h" "Minigin/FPSComponent.h" "Minigin/FPSComponent.cpp" "Minigin/TextComponent.h" "Minigin/TextComponent.cpp" "Minigin/TransformComponent.h" "Minigin/TransformComponent.cpp" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/RotateComponent.cpp" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/MoveCommand.cpp" "Minigin/HealthComponent.h" "Minigin/HealthComponent.cpp" "Minigin/EventID.h" "Minigin/Observer.h" "Minigin/HealthUIComponent.h" "Minigin/HealthUIComponent.cpp" "Minigin/DamageCommand.h" "Minigin/ScoreComponent.h" "Minigin/ScoreComponent.cpp" "Minigin/ScoreUIComponent.h" "Minigin/ScoreUIComponent.cpp" "Minigin/ScoreCommand.h")
+ "Minigin/MoveCommand.cpp" "Minigin/Component.h" "Minigin/FPSComponent.h" "Minigin/FPSComponent.cpp" "Minigin/TextComponent.h" "Minigin/TextComponent.cpp" "Minigin/TransformComponent.h" "Minigin/TransformComponent.cpp" "Minigin/RenderComponent.h" "Minigin/RenderComponent.cpp" "Minigin/RotateComponent.cpp" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/BenchMarkComponent.cpp" "Minigin/Command.h" "Minigin/GameObjectCommand.h" "Minigin/Controller.h" "Minigin/Controller.cpp" "Minigin/MoveCommand.h" "Minigin/MoveCommand.cpp" "Minigin/HealthComponent.h" "Minigin/HealthComponent.cpp" "Minigin/EventID.h" "Minigin/Observer.h" "Minigin/HealthUIComponent.h" "Minigin/HealthUIComponent.cpp" "Minigin/DamageCommand.h" "Minigin/ScoreComponent.h" "Minigin/ScoreComponent.cpp" "Minigin/ScoreUIComponent.h" "Minigin/ScoreUIComponent.cpp" "Minigin/ScoreCommand.h" "Minigin/SoundSystem.h" "Minigin/ServiceLocator.h" "Minigin/ServiceLocator.cpp" "Minigin/SDL_MixerSoundSystem.h" "Minigin/SDL_MixerSoundSystem.cpp" "Minigin/LevelLoader.h" "Minigin/LevelLoader.cpp")
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
@@ -104,6 +104,37 @@ if(NOT SDL3_ttf_FOUND)
   endif()
 endif()
 
+# Add SDL3_mixer
+find_package(SDL3_mixer 3.2.0 CONFIG QUIET)
+if(NOT SDL3_mixer_FOUND)
+  if (WIN32)
+    FetchContent_Declare(
+      SDL3_mixer
+      URL https://github.com/libsdl-org/SDL_mixer/releases/download/release-3.2.0/SDL3_mixer-devel-3.2.0-VC.zip
+      DOWNLOAD_NO_PROGRESS ON
+      DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
+    )
+    FetchContent_MakeAvailable(SDL3_mixer)
+    list(PREPEND CMAKE_PREFIX_PATH "${sdl3_mixer_SOURCE_DIR}")
+    find_package(SDL3_mixer CONFIG REQUIRED)
+  else()
+    FetchContent_Declare(
+      SDL3_mixer
+      GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+      GIT_TAG release-3.2.0
+      GIT_SHALLOW TRUE
+      GIT_PROGRESS TRUE
+    )
+    set(SDLMIXER_VENDORED OFF)
+    set(SDLMIXER_FLAC OFF)
+    set(SDLMIXER_MOD OFF)
+    set(SDLMIXER_MP3 ON)
+    set(SDLMIXER_OGG OFF)
+    set(SDLMIXER_OPUS OFF)
+    FetchContent_MakeAvailable(SDL3_mixer)
+  endif()
+endif()
+
 # Dear ImGui
 FetchContent_Declare(
   imgui
@@ -123,7 +154,7 @@ add_library(imgui STATIC
   ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp
 )
 
-target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${sdl3_SOURCE_DIR}/include)
+target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${sdl3_SOURCE_DIR} include)
 target_link_libraries(imgui PUBLIC SDL3::SDL3)
 # enable c++20 features
 target_compile_features(imgui PUBLIC cxx_std_20)
@@ -139,6 +170,7 @@ target_include_directories("${TARGET_NAME}" PUBLIC
   ${sdl3_SOURCE_DIR}/include
   ${sdl3_image_SOURCE_DIR}/include
   ${sdl3_ttf_SOURCE_DIR}/include
+  ${sdl3_mixer_SOURCE_DIR}/include
   ${imgui_SOURCE_DIR}
   ${VLD_INCLUDE_DIR}
 )
@@ -146,6 +178,7 @@ target_include_directories("${TARGET_NAME}" PUBLIC
 target_link_libraries("${TARGET_NAME}" PUBLIC 
   SDL3::SDL3 
   SDL3_ttf::SDL3_ttf
+   SDL3_mixer::SDL3_mixer
   imgui
   ${VLD_LIBRARIES}
 )
@@ -167,7 +200,7 @@ add_executable(Tron-BattleTanks WIN32
 "Tron-BattleTanks/TankState.h" 
 "Tron-BattleTanks/TankStateComponent.h" 
 "Tron-BattleTanks/TankStateComponent.cpp"
- "Tron-BattleTanks/StatesTank.cpp" )
+ "Tron-BattleTanks/StatesTank.cpp"  "Tron-BattleTanks/Level.h" "Tron-BattleTanks/Level0.h" "Tron-BattleTanks/Level0.cpp" "Tron-BattleTanks/LevelBuilder.h" "Tron-BattleTanks/LevelManager.h" "Tron-BattleTanks/LevelManager.cpp" "Tron-BattleTanks/LevelBuilder.cpp")
 target_link_libraries(Tron-BattleTanks PRIVATE ${TARGET_NAME})
 
 if(EMSCRIPTEN)
@@ -198,6 +231,7 @@ elseif(WIN32)
   set(SDL_RUNTIME_DLLS
     SDL3::SDL3
     SDL3_ttf::SDL3_ttf
+    SDL3_mixer::SDL3_mixer
   )
 
   foreach(dllTarget IN LISTS SDL_RUNTIME_DLLS)

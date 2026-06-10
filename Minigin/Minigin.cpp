@@ -17,6 +17,9 @@
 #include "ResourceManager.h"
 #include <thread>
 
+#include "ServiceLocator.h"
+#include "SDL_MixerSoundSystem.h"
+
 #if USE_STEAMWORKS
 #pragma warning (push)
 #pragma warning (disable:4996)
@@ -73,7 +76,7 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 	}
 
 	g_window = SDL_CreateWindow(
-		"Programming 4 assignment",
+		"Tron - BattleTanks",
 		1024,
 		576,
 		SDL_WINDOW_OPENGL
