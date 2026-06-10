@@ -1,5 +1,6 @@
 #pragma once	
 #include "Level.h"
+#include "LevelBuilder.h"
 
 namespace tron
 {
@@ -9,5 +10,6 @@ namespace tron
 		void Load(dae::Scene& scene) override;
 		std::string GetCSVPath() const override { return "Level/LevelLayout0.csv"; }
 
+	private:
 	};
 }

@@ -16,10 +16,19 @@ namespace tron
         PlayerSpawn = 6
     };
 
+    struct LevelLayout
+    {
+        std::vector<std::vector<int>> grid;
+        float tileSize;
+        float offsetX;
+        float offsetY;
+        float scale;
+    };
+
 	class LevelBuilder
 	{
 	public:
-		static void BuildScene(dae::Scene& scene, const std::vector<std::vector<int>>& grid);
+        static LevelLayout BuildScene(dae::Scene& scene, const std::vector<std::vector<int>>& grid);
 
     private:
         static constexpr float TILE_SIZE = 8.f;

@@ -6,7 +6,8 @@
 #include "RenderComponent.h"
 #include "ResourceManager.h"
 
-void tron::LevelBuilder::BuildScene(dae::Scene& scene, const std::vector<std::vector<int>>& grid)
+tron::LevelLayout tron::LevelBuilder::BuildScene(dae::Scene& scene,
+    const std::vector<std::vector<int>>& grid)
 {
     constexpr float windowWidth = 1024.f;
     constexpr float windowHeight = 576.f;
@@ -17,10 +18,8 @@ void tron::LevelBuilder::BuildScene(dae::Scene& scene, const std::vector<std::ve
     const float levelWidth = cols * TILE_SIZE;
     const float levelHeight = rows * TILE_SIZE;
 
-    // Scale to fit window, keeping aspect ratio
     const float scale = std::min(windowWidth / levelWidth, windowHeight / levelHeight);
 
-    // Center the level
     const float offsetX = (windowWidth - levelWidth * scale) / 2.f;
     const float offsetY = (windowHeight - levelHeight * scale) / 2.f;
 
@@ -57,6 +56,7 @@ void tron::LevelBuilder::BuildScene(dae::Scene& scene, const std::vector<std::ve
             }
         }
     }
+    return { grid, TILE_SIZE * scale, offsetX, offsetY, scale };
 }
 
 void tron::LevelBuilder::SpawnTile(dae::Scene& scene, float x, float y, float scale, const std::string& texturePath)

@@ -237,12 +237,24 @@ endif()
 # ==============================
 
 # Executable for the game
-add_executable(Tron-BattleTanks WIN32 
+add_executable(Tron-BattleTanks WIN32
 "Tron-BattleTanks/Main.cpp" 
 "Tron-BattleTanks/TankState.h" 
 "Tron-BattleTanks/TankStateComponent.h" 
 "Tron-BattleTanks/TankStateComponent.cpp"
- "Tron-BattleTanks/StatesTank.cpp"  "Tron-BattleTanks/Level.h" "Tron-BattleTanks/Level0.h" "Tron-BattleTanks/Level0.cpp" "Tron-BattleTanks/LevelBuilder.h" "Tron-BattleTanks/LevelManager.h" "Tron-BattleTanks/LevelManager.cpp" "Tron-BattleTanks/LevelBuilder.cpp")
+ "Tron-BattleTanks/StatesTank.cpp"  
+ "Tron-BattleTanks/Level.h" 
+ "Tron-BattleTanks/Level0.h"
+ "Tron-BattleTanks/Level0.cpp"
+ "Tron-BattleTanks/LevelBuilder.h" 
+ "Tron-BattleTanks/LevelManager.h" 
+ "Tron-BattleTanks/LevelManager.cpp"
+ "Tron-BattleTanks/LevelBuilder.cpp" 
+ "Tron-BattleTanks/GridMoveCommand.h"
+ "Tron-BattleTanks/GridCollisionComponent.h" 
+ "Tron-BattleTanks/GridCollisionComponent.cpp" 
+ "Tron-BattleTanks/GridMovementComponent.h" 
+ "Tron-BattleTanks/GridMovementComponent.cpp")
 target_link_libraries(Tron-BattleTanks PRIVATE ${TARGET_NAME})
 
 if(EMSCRIPTEN)
