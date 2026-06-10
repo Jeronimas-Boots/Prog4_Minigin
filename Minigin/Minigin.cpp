@@ -17,9 +17,6 @@
 #include "ResourceManager.h"
 #include <thread>
 
-#include "ServiceLocator.h"
-#include "SDL_MixerSoundSystem.h"
-
 #if USE_STEAMWORKS
 #pragma warning (push)
 #pragma warning (disable:4996)
