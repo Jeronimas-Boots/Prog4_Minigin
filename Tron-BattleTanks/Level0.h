@@ -7,7 +7,7 @@ namespace tron
 	{
 	public:
 		void Load(dae::Scene& scene) override;
-		std::string GetCSVPath() const override { return "Data/Level/LevelLayout0.csv"; }
+		std::string GetCSVPath() const override { return "Level/LevelLayout0.csv"; }
 
 	};
 }

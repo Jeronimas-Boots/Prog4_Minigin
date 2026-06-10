@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <map>
+#include <vector>
 #include "Singleton.h"
 
 namespace dae
@@ -15,6 +16,7 @@ namespace dae
 		void Init(const std::filesystem::path& data);
 		std::shared_ptr<Texture2D> LoadTexture(const std::string& file);
 		std::shared_ptr<Font> LoadFont(const std::string& file, uint8_t size);
+		std::vector<std::vector<int>> LoadCSV(const std::string& file);
 	private:
 		friend class Singleton<ResourceManager>;
 		ResourceManager() = default;

@@ -4,6 +4,7 @@
 #include "Renderer.h"
 #include "Texture2D.h"
 #include "Font.h"
+#include "LevelLoader.h"
 
 namespace fs = std::filesystem;
 
@@ -34,6 +35,12 @@ std::shared_ptr<dae::Font> dae::ResourceManager::LoadFont(const std::string& fil
 	if(m_loadedFonts.find(key) == m_loadedFonts.end())
 		m_loadedFonts.insert(std::pair(key,std::make_shared<Font>(fullPath.string(), size)));
 	return m_loadedFonts.at(key);
+}
+
+std::vector<std::vector<int>> dae::ResourceManager::LoadCSV(const std::string& file)
+{
+	const auto fullPath = m_dataPath / file;
+	return dae::LevelLoader::Load(fullPath.string());
 }
 
 void dae::ResourceManager::UnloadUnusedResources()
