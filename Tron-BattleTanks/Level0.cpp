@@ -27,18 +27,23 @@ void tron::Level0::Load(dae::Scene& scene)
     // Player
     auto playerGO = std::make_unique<dae::GameObject>();
 
-    // Start on the first PlayerSpawn tile (tile value 6)
-    float startX = layout.offsetX + layout.tileSize * 0.5f;
-    float startY = layout.offsetY + layout.tileSize * 0.5f;
+    // Find spawn tile
+    float spawnTileX = layout.offsetX;
+    float spawnTileY = layout.offsetY;
     for (int row = 0; row < static_cast<int>(layout.grid.size()); ++row)
         for (int col = 0; col < static_cast<int>(layout.grid[row].size()); ++col)
             if (layout.grid[row][col] == 6)
             {
-                startX = layout.offsetX + col * layout.tileSize + layout.tileSize * 0.5f;
-                startY = layout.offsetY + row * layout.tileSize + layout.tileSize * 0.5f;
-                goto foundSpawn; // break out of both loops
+                spawnTileX = layout.offsetX + col * layout.tileSize;
+                spawnTileY = layout.offsetY + row * layout.tileSize;
+                goto foundSpawn;
             }
 foundSpawn:
+
+    // The collision footprint is 1 tile inward from the render anchor (m_CollisionOffset = {1,1})
+    // So render anchor = spawn tile top-left corner minus 1 tile in each axis
+    const float startX = spawnTileX - layout.tileSize; // 1 tile left of spawn col
+    const float startY = spawnTileY - layout.tileSize; // 1 tile above spawn row
 
     playerGO->AddComponent<dae::TransformComponent>(
         std::make_unique<dae::TransformComponent>(playerGO.get(), startX, startY));

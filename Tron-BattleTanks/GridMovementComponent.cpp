@@ -30,7 +30,6 @@ void tron::GridMovementComponent::Update(float deltaTime)
             SnapToTarget();
             m_IsMoving = false;
 
-            // Only continue if there is a buffered direction
             if (m_BufferedDirection != glm::vec2{ 0.f, 0.f })
             {
                 StartMove(m_BufferedDirection);
@@ -48,7 +47,6 @@ void tron::GridMovementComponent::Update(float deltaTime)
     }
     else
     {
-        // Only move if there is a buffered direction
         if (m_BufferedDirection != glm::vec2{ 0.f, 0.f })
         {
             StartMove(m_BufferedDirection);
@@ -62,7 +60,7 @@ void tron::GridMovementComponent::RequestMove(const glm::vec2& direction)
     if (!m_IsMoving)
         StartMove(direction);
     else
-        m_BufferedDirection = direction; // buffer for next tile
+        m_BufferedDirection = direction;
 }
 
 void tron::GridMovementComponent::Stopmove()
@@ -75,18 +73,36 @@ void tron::GridMovementComponent::StartMove(const glm::vec2& direction)
 {
     if (direction == glm::vec2{ 0.f, 0.f }) return;
 
-    const glm::vec3 tileCenter = GetCurrentTileCenter();
     const float tileSize = m_Collision->GetTileSize();
 
-    const float targetX = tileCenter.x + direction.x * tileSize;
-    const float targetY = tileCenter.y + direction.y * tileSize;
+    // Collision anchor of the current position
+    const glm::vec3 collAnchor = GetFootprintAnchor();
 
-    if (m_Collision->IsWalkable(targetX, targetY))
+    const float targetCollX = collAnchor.x + direction.x * tileSize;
+    const float targetCollY = collAnchor.y + direction.y * tileSize;
+
+    if (CanMoveTo(targetCollX, targetCollY))
     {
-        m_TargetPosition = { targetX, targetY, 0.f };
+        // Store target in render-space (subtract collision offset back out)
+        m_TargetPosition = {
+            targetCollX - m_CollisionOffset.x * tileSize,
+            targetCollY - m_CollisionOffset.y * tileSize,
+            0.f
+        };
         m_CurrentDirection = direction;
         m_IsMoving = true;
     }
+}
+
+bool tron::GridMovementComponent::CanMoveTo(float anchorX, float anchorY) const
+{
+    const float tileSize = m_Collision->GetTileSize();
+
+    // Test all four tiles of the 2x2 footprint, each by its own center
+    return m_Collision->IsWalkable(anchorX + tileSize * 0.5f, anchorY + tileSize * 0.5f) &&           // top-left tile
+        m_Collision->IsWalkable(anchorX + tileSize * 1.5f, anchorY + tileSize * 0.5f) &&           // top-right tile
+        m_Collision->IsWalkable(anchorX + tileSize * 0.5f, anchorY + tileSize * 1.5f) &&           // bottom-left tile
+        m_Collision->IsWalkable(anchorX + tileSize * 1.5f, anchorY + tileSize * 1.5f);             // bottom-right tile
 }
 
 void tron::GridMovementComponent::SnapToTarget()
@@ -96,7 +112,7 @@ void tron::GridMovementComponent::SnapToTarget()
         transform->SetLocalPosition(m_TargetPosition.x, m_TargetPosition.y);
 }
 
-glm::vec3 tron::GridMovementComponent::GetCurrentTileCenter() const
+glm::vec3 tron::GridMovementComponent::GetFootprintAnchor() const
 {
     auto* transform = GetOwner()->GetComponent<dae::TransformComponent>();
     if (!transform) return {};
@@ -104,15 +120,18 @@ glm::vec3 tron::GridMovementComponent::GetCurrentTileCenter() const
     const float tileSize = m_Collision->GetTileSize();
     const float offsetX = m_Collision->GetOffsetX();
     const float offsetY = m_Collision->GetOffsetY();
-    const glm::vec3 pos = transform->GetLocalPosition();
+    const glm::vec3 pos = transform->GetLocalPosition(); // top-left of the 4x4 sprite
 
-    // Snap to nearest tile center
-    const int col = static_cast<int>((pos.x - offsetX) / tileSize);
-    const int row = static_cast<int>((pos.y - offsetY) / tileSize);
+    // Shift inward by the collision offset to get the center 2x2 footprint anchor
+    const float collX = pos.x + m_CollisionOffset.x * tileSize;
+    const float collY = pos.y + m_CollisionOffset.y * tileSize;
+
+    const int col = static_cast<int>(std::round((collX - offsetX) / tileSize));
+    const int row = static_cast<int>(std::round((collY - offsetY) / tileSize));
 
     return {
-        offsetX + col * tileSize + tileSize * 0.5f,
-        offsetY + row * tileSize + tileSize * 0.5f,
+        offsetX + col * tileSize,
+        offsetY + row * tileSize,
         0.f
     };
 }
