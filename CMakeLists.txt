@@ -256,7 +256,7 @@ add_executable(Tron-BattleTanks WIN32
  "Tron-BattleTanks/MenuStateComponent.cpp" 
  "Tron-BattleTanks/MenuCommands.h" 
  "Tron-BattleTanks/MainMenu.h" 
- "Tron-BattleTanks/MainMenu.cpp")
+ "Tron-BattleTanks/MainMenu.cpp" "Tron-BattleTanks/TankBuilder.h" "Tron-BattleTanks/TankBuilder.cpp")
 target_link_libraries(Tron-BattleTanks PRIVATE ${TARGET_NAME})
 
 if(EMSCRIPTEN)
