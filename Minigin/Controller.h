@@ -2,6 +2,8 @@
 #include <memory>
 #include <glm/glm.hpp>
 
+union SDL_Event;
+
 namespace dae
 {
 	enum class ControllerButton
@@ -43,5 +45,6 @@ namespace dae
 		bool IsPressed(ControllerButton button) const;
 
 		glm::vec2 GetRightStick() const;
+		void HandleEvent(const SDL_Event& e);
 	};
 }
