@@ -24,6 +24,18 @@ dae::InputManager::~InputManager()
 
 bool dae::InputManager::ProcessInput(float deltaTime)
 {
+    SDL_Event e;
+    while (SDL_PollEvent(&e))
+    {
+        if (e.type == SDL_EVENT_QUIT)
+            return false;
+
+#ifndef _WIN32
+        HandleControllerEvent(e);
+#endif
+        ImGui_ImplSDL3_ProcessEvent(&e);
+    }
+
     for (auto& controller : m_Controllers)
         controller->Update();
 
@@ -75,6 +87,14 @@ bool dae::InputManager::ProcessInput(float deltaTime)
 
     return true;
 }
+
+#ifndef _WIN32
+void dae::InputManager::HandleControllerEvent(const SDL_Event& e)
+{
+    for (auto& controller : m_Controllers)
+        controller->HandleEvent(e);
+}
+#endif
 
 void dae::InputManager::BindCommand(unsigned int controllerIndex, ControllerButton button, KeyState keyState, std::unique_ptr<Command> command)
 {

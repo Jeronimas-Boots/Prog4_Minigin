@@ -36,6 +36,11 @@ namespace dae
 
 		glm::vec2 GetRightStick(unsigned int controllerIndex) const;
 
+		// InputManager.h - add
+#ifndef _WIN32
+		void HandleControllerEvent(const SDL_Event& e);
+#endif
+
 	private:
 		struct ControllerKey
 		{

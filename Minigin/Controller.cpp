@@ -18,11 +18,7 @@ namespace dae
 	{
 	public:
 		explicit ControllerImpl(unsigned int controllerIndex)
-#ifdef _WIN32
 			: m_ControllerIndex(controllerIndex)
-#else
-			: m_ControllerIndex(controllerIndex)
-#endif
 		{
 #ifndef _WIN32
 			TryOpenGamepad();
@@ -52,34 +48,56 @@ namespace dae
 				m_PreviousState = currentState;
 			}
 #else
-			TryOpenGamepad(); // retry every frame until connected
-
-			if (m_Gamepad)
-			{
-				unsigned int currentState = 0;
-
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_DPAD_UP))        currentState |= static_cast<unsigned int>(ControllerButton::DPadUp);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_DPAD_DOWN))      currentState |= static_cast<unsigned int>(ControllerButton::DPadDown);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_DPAD_LEFT))      currentState |= static_cast<unsigned int>(ControllerButton::DPadLeft);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_DPAD_RIGHT))     currentState |= static_cast<unsigned int>(ControllerButton::DPadRight);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_START))          currentState |= static_cast<unsigned int>(ControllerButton::Start);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_BACK))           currentState |= static_cast<unsigned int>(ControllerButton::Back);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_LEFT_STICK))     currentState |= static_cast<unsigned int>(ControllerButton::LeftThumb);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_RIGHT_STICK))    currentState |= static_cast<unsigned int>(ControllerButton::RightThumb);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_LEFT_SHOULDER))  currentState |= static_cast<unsigned int>(ControllerButton::LeftShoulder);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER)) currentState |= static_cast<unsigned int>(ControllerButton::RightShoulder);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_SOUTH))          currentState |= static_cast<unsigned int>(ControllerButton::ButtonA);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_EAST))           currentState |= static_cast<unsigned int>(ControllerButton::ButtonB);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_WEST))           currentState |= static_cast<unsigned int>(ControllerButton::ButtonX);
-				if (SDL_GetGamepadButton(m_Gamepad, SDL_GAMEPAD_BUTTON_NORTH))          currentState |= static_cast<unsigned int>(ControllerButton::ButtonY);
-
-				const auto buttonChanges = m_PreviousButtonState ^ currentState;
-				m_ButtonsPressedThisFrame = buttonChanges & currentState;
-				m_ButtonsReleasedThisFrame = buttonChanges & (~currentState);
-				m_PreviousButtonState = currentState;
-			}
+			// Compute this-frame changes from event-driven state
+			const auto buttonChanges = m_PreviousButtonState ^ m_CurrentButtonState;
+			m_ButtonsPressedThisFrame = buttonChanges & m_CurrentButtonState;
+			m_ButtonsReleasedThisFrame = buttonChanges & (~m_CurrentButtonState);
+			m_PreviousButtonState = m_CurrentButtonState;
 #endif
 		}
+
+#ifndef _WIN32
+		void HandleEvent(const SDL_Event& e)
+		{
+			if (e.type == SDL_EVENT_GAMEPAD_ADDED)
+			{
+				TryOpenGamepad();
+				return;
+			}
+
+			if (e.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN ||
+				e.type == SDL_EVENT_GAMEPAD_BUTTON_UP)
+			{
+				if (!m_Gamepad) return;
+				if (e.gbutton.which != SDL_GetGamepadID(m_Gamepad)) return;
+
+				unsigned int buttonBit = 0;
+				switch (e.gbutton.button)
+				{
+				case SDL_GAMEPAD_BUTTON_DPAD_UP:        buttonBit = static_cast<unsigned int>(ControllerButton::DPadUp);        break;
+				case SDL_GAMEPAD_BUTTON_DPAD_DOWN:      buttonBit = static_cast<unsigned int>(ControllerButton::DPadDown);      break;
+				case SDL_GAMEPAD_BUTTON_DPAD_LEFT:      buttonBit = static_cast<unsigned int>(ControllerButton::DPadLeft);      break;
+				case SDL_GAMEPAD_BUTTON_DPAD_RIGHT:     buttonBit = static_cast<unsigned int>(ControllerButton::DPadRight);     break;
+				case SDL_GAMEPAD_BUTTON_START:          buttonBit = static_cast<unsigned int>(ControllerButton::Start);         break;
+				case SDL_GAMEPAD_BUTTON_BACK:           buttonBit = static_cast<unsigned int>(ControllerButton::Back);          break;
+				case SDL_GAMEPAD_BUTTON_LEFT_STICK:     buttonBit = static_cast<unsigned int>(ControllerButton::LeftThumb);     break;
+				case SDL_GAMEPAD_BUTTON_RIGHT_STICK:    buttonBit = static_cast<unsigned int>(ControllerButton::RightThumb);    break;
+				case SDL_GAMEPAD_BUTTON_LEFT_SHOULDER:  buttonBit = static_cast<unsigned int>(ControllerButton::LeftShoulder);  break;
+				case SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER: buttonBit = static_cast<unsigned int>(ControllerButton::RightShoulder); break;
+				case SDL_GAMEPAD_BUTTON_SOUTH:          buttonBit = static_cast<unsigned int>(ControllerButton::ButtonA);       break;
+				case SDL_GAMEPAD_BUTTON_EAST:           buttonBit = static_cast<unsigned int>(ControllerButton::ButtonB);       break;
+				case SDL_GAMEPAD_BUTTON_WEST:           buttonBit = static_cast<unsigned int>(ControllerButton::ButtonX);       break;
+				case SDL_GAMEPAD_BUTTON_NORTH:          buttonBit = static_cast<unsigned int>(ControllerButton::ButtonY);       break;
+				default: return;
+				}
+
+				if (e.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN)
+					m_CurrentButtonState |= buttonBit;
+				else
+					m_CurrentButtonState &= ~buttonBit;
+			}
+		}
+#endif
 
 		bool IsDownThisFrame(ControllerButton button) const
 		{
@@ -96,7 +114,7 @@ namespace dae
 #ifdef _WIN32
 			return (m_PreviousState.Gamepad.wButtons & static_cast<unsigned int>(button)) != 0;
 #else
-			return (m_PreviousButtonState & static_cast<unsigned int>(button)) != 0;
+			return (m_CurrentButtonState & static_cast<unsigned int>(button)) != 0;
 #endif
 		}
 
@@ -122,13 +140,16 @@ namespace dae
 		}
 
 	private:
+		unsigned int m_ControllerIndex{ 0 };
+		unsigned int m_ButtonsPressedThisFrame{ 0 };
+		unsigned int m_ButtonsReleasedThisFrame{ 0 };
+
 #ifdef _WIN32
 		XINPUT_STATE m_PreviousState{};
-		unsigned int m_ControllerIndex;
 #else
 		SDL_Gamepad* m_Gamepad{ nullptr };
 		unsigned int m_PreviousButtonState{ 0 };
-		unsigned int m_ControllerIndex{ 0 };
+		unsigned int m_CurrentButtonState{ 0 };
 
 		void TryOpenGamepad()
 		{
@@ -157,8 +178,6 @@ namespace dae
 			SDL_free(joysticks);
 		}
 #endif
-		unsigned int m_ButtonsPressedThisFrame{ 0 };
-		unsigned int m_ButtonsReleasedThisFrame{ 0 };
 	};
 
 	Controller::Controller(unsigned int controllerIndex)
@@ -192,4 +211,11 @@ namespace dae
 	{
 		return m_Impl->GetRightStick();
 	}
+
+#ifndef _WIN32
+	void Controller::HandleEvent(const SDL_Event& e)
+	{
+		m_Impl->HandleEvent(e);
+	}
+#endif
 }
