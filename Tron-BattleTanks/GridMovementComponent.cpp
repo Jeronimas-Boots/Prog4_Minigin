@@ -106,7 +106,7 @@ bool tron::GridMovementComponent::CanMoveTo(float anchorX, float anchorY) const
     const float tileSize = m_Collision->GetTileSize();
 
     // Test all four tiles of the 2x2 footprint, each by its own center
-    return m_Collision->IsWalkable(anchorX + tileSize * 0.5f, anchorY + tileSize * 0.5f) &&           // top-left tile
+    return m_Collision->IsWalkable(anchorX + tileSize * 0.5f, anchorY + tileSize * 0.5f) &&        // top-left tile
         m_Collision->IsWalkable(anchorX + tileSize * 1.5f, anchorY + tileSize * 0.5f) &&           // top-right tile
         m_Collision->IsWalkable(anchorX + tileSize * 0.5f, anchorY + tileSize * 1.5f) &&           // bottom-left tile
         m_Collision->IsWalkable(anchorX + tileSize * 1.5f, anchorY + tileSize * 1.5f);             // bottom-right tile
