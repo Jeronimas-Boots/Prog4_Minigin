@@ -55,11 +55,11 @@ add_library(${TARGET_NAME} STATIC
   "Minigin/ScoreUIComponent.h"
   "Minigin/ScoreUIComponent.cpp"
   "Minigin/ScoreCommand.h"
-  "Minigin/SoundSystem.h"
-  "Minigin/ServiceLocator.h"
-  "Minigin/ServiceLocator.cpp"
-  "Minigin/SDL_MixerSoundSystem.h"
-  "Minigin/SDL_MixerSoundSystem.cpp"
+  #"Minigin/SoundSystem.h"
+  #"Minigin/ServiceLocator.h"
+  #"Minigin/ServiceLocator.cpp"
+  #"Minigin/SDL_MixerSoundSystem.h"
+  #"Minigin/SDL_MixerSoundSystem.cpp"
   "Minigin/LevelLoader.h"
   "Minigin/LevelLoader.cpp"
 )
@@ -247,8 +247,16 @@ add_executable(Tron-BattleTanks WIN32
   "Tron-BattleTanks/GridCollisionComponent.cpp"
   "Tron-BattleTanks/GridMovementComponent.h"
   "Tron-BattleTanks/GridMovementComponent.cpp"
-  "Tron-BattleTanks/PlaySoundCommand.h"
- "Tron-BattleTanks/GameMode.h" "Tron-BattleTanks/MenuState.h" "Tron-BattleTanks/StatesMenu.h" "Tron-BattleTanks/StatesMenu..cpp" "Tron-BattleTanks/MenuStateComponent.h" "Tron-BattleTanks/MenuStateComponent.cpp" "Tron-BattleTanks/MenuCommands.h" "Tron-BattleTanks/MainMenu.h" "Tron-BattleTanks/MainMenu.cpp")
+  #"Tron-BattleTanks/PlaySoundCommand.h"
+ "Tron-BattleTanks/GameMode.h" 
+ "Tron-BattleTanks/MenuState.h" 
+ "Tron-BattleTanks/StatesMenu.h" 
+ "Tron-BattleTanks/StatesMenu..cpp" 
+ "Tron-BattleTanks/MenuStateComponent.h" 
+ "Tron-BattleTanks/MenuStateComponent.cpp" 
+ "Tron-BattleTanks/MenuCommands.h" 
+ "Tron-BattleTanks/MainMenu.h" 
+ "Tron-BattleTanks/MainMenu.cpp")
 target_link_libraries(Tron-BattleTanks PRIVATE ${TARGET_NAME})
 
 if(EMSCRIPTEN)
