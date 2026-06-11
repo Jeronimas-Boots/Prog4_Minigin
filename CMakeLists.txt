@@ -266,12 +266,7 @@ target_link_libraries(Tron-BattleTanks PRIVATE ${TARGET_NAME})
 if(EMSCRIPTEN)
   # -sUSE_SDL_MIXER=2 pulls in Emscripten's own mixer with MP3 support via mpg123
   set(EMSCRIPTEN_COMPILE_FLAGS "-g -sUSE_SDL_MIXER=2 -sUSE_MPG123=1")
-  set(EMSCRIPTEN_LINK_FLAGS
-    "-sUSE_SDL=3 -sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1 \
-     -sUSE_SDL_MIXER=2 -sUSE_MPG123=1 \
-     -g -sALLOW_MEMORY_GROWTH \
-     --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\""
-  )
+  set(EMSCRIPTEN_LINK_FLAGS "-sUSE_SDL=3 -sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\" -sFORCE_FILESYSTEM=1")
   set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmscriptenToolchain.cmake)
   set_target_properties(Tron-BattleTanks PROPERTIES
     COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"
