@@ -24,6 +24,7 @@ dae::InputManager::~InputManager()
 
 bool dae::InputManager::ProcessInput(float deltaTime)
 {
+    // Process SDL events first so controller state is up to date
     SDL_Event e;
     while (SDL_PollEvent(&e))
     {
@@ -63,9 +64,9 @@ bool dae::InputManager::ProcessInput(float deltaTime)
         const bool wasPreviouslyPressed = m_PreviousKeyboardState[key.scancode];
         switch (key.keyState)
         {
-        case KeyState::Down:    shouldExecute = isCurrentlyPressed && !wasPreviouslyPressed;  break;
-        case KeyState::Up:      shouldExecute = !isCurrentlyPressed && wasPreviouslyPressed;  break;
-        case KeyState::Pressed: shouldExecute = isCurrentlyPressed;                           break;
+        case KeyState::Down:    shouldExecute = isCurrentlyPressed && !wasPreviouslyPressed; break;
+        case KeyState::Up:      shouldExecute = !isCurrentlyPressed && wasPreviouslyPressed; break;
+        case KeyState::Pressed: shouldExecute = isCurrentlyPressed;                          break;
         }
         if (shouldExecute && command)
             toExecute.push_back(command.get());
@@ -76,14 +77,6 @@ bool dae::InputManager::ProcessInput(float deltaTime)
     // Execute after iteration is complete — safe to modify maps now
     for (auto* command : toExecute)
         command->Execute(deltaTime);
-
-    SDL_Event e;
-    while (SDL_PollEvent(&e))
-    {
-        if (e.type == SDL_EVENT_QUIT)
-            return false;
-        ImGui_ImplSDL3_ProcessEvent(&e);
-    }
 
     return true;
 }
