@@ -107,6 +107,28 @@ namespace dae
 #endif
 		}
 
+		glm::vec2 GetRightStick() const
+		{
+			constexpr float deadzone = 0.2f;
+			constexpr float maxValue = 32767.f;
+
+#ifdef _WIN32
+			float x = m_PreviousState.Gamepad.sThumbRX / maxValue;
+			float y = m_PreviousState.Gamepad.sThumbRY / maxValue;
+#else
+			float x = 0.f, y = 0.f;
+			if (m_Gamepad)
+			{
+				x = SDL_GetGamepadAxis(m_Gamepad, SDL_GAMEPAD_AXIS_RIGHTX) / maxValue;
+				y = -SDL_GetGamepadAxis(m_Gamepad, SDL_GAMEPAD_AXIS_RIGHTY) / maxValue;
+			}
+#endif
+			// Apply deadzone
+			if (std::abs(x) < deadzone && std::abs(y) < deadzone)
+				return { 0.f, 0.f };
+			return { x, y };
+		}
+
 	private:
 #ifdef _WIN32
 		XINPUT_STATE m_PreviousState{};
@@ -118,6 +140,8 @@ namespace dae
 		unsigned int m_ButtonsPressedThisFrame{ 0 };
 		unsigned int m_ButtonsReleasedThisFrame{ 0 };
 	};
+
+
 
 	Controller::Controller(unsigned int controllerIndex)
 		: m_Impl(std::make_unique<ControllerImpl>(controllerIndex))
@@ -144,5 +168,9 @@ namespace dae
 	bool Controller::IsPressed(ControllerButton button) const
 	{
 		return m_Impl->IsPressed(button);
+	}
+	glm::vec2 Controller::GetRightStick() const
+	{
+		return m_Impl->GetRightStick();
 	}
 }

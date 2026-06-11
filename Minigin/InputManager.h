@@ -34,6 +34,8 @@ namespace dae
 
 		void ClearCommands();
 
+		glm::vec2 GetRightStick(unsigned int controllerIndex) const;
+
 	private:
 		struct ControllerKey
 		{

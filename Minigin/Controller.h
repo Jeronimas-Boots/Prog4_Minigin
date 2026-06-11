@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <glm/glm.hpp>
 
 namespace dae
 {
@@ -40,5 +41,7 @@ namespace dae
 		bool IsDownThisFrame(ControllerButton button) const;
 		bool IsUpThisFrame(ControllerButton button) const;
 		bool IsPressed(ControllerButton button) const;
+
+		glm::vec2 GetRightStick() const;
 	};
 }

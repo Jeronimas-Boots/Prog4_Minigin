@@ -7,9 +7,12 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include "TankBuilder.h"
+#include "inputManager.h"
 
 void tron::Level0::Load(dae::Scene& scene, GameMode mode )
 {
+    dae::InputManager::GetInstance().ClearCommands();
+
     auto grid = dae::ResourceManager::GetInstance().LoadCSV(GetCSVPath());
     auto layout = tron::LevelBuilder::BuildScene(scene, grid);
 

@@ -8,6 +8,37 @@
 #include "RenderComponent.h"
 #include "ResourceManager.h"
 #include "InputManager.h"
+#include "GunComponent.h"
+
+static dae::GameObject* CreateGun(dae::Scene& scene, dae::GameObject* tankGO, const tron::LevelLayout& layout, int playerIndex)
+{
+    const std::string texture = playerIndex == 0 ? "BlueTankGun.png" : "RedTankGun.png";
+
+    auto gunGO = std::make_unique<dae::GameObject>();
+
+    // Center the 48x48 gun on the 32x32 tank
+    // Offset = -((gunSize - tankSize) / 2) * scale = -(8) * scale
+    const float centerOffset = -8.f * layout.scale;
+
+    gunGO->AddComponent<dae::TransformComponent>(
+        std::make_unique<dae::TransformComponent>(gunGO.get(), centerOffset, centerOffset));
+
+    gunGO->AddComponent<dae::RenderComponent>(
+        std::make_unique<dae::RenderComponent>(
+            gunGO.get(),
+            dae::ResourceManager::GetInstance().LoadTexture(texture)));
+
+    gunGO->GetComponent<dae::RenderComponent>()->SetScale(layout.scale, layout.scale);
+
+    gunGO->AddComponent<tron::GunComponent>(
+        std::make_unique<tron::GunComponent>(gunGO.get(), playerIndex));
+
+    gunGO->SetParent(tankGO, false);
+
+    dae::GameObject* ptr = gunGO.get();
+    scene.Add(std::move(gunGO));
+    return ptr;
+}
 
 dae::GameObject* tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionComponent* collision, const tron::LevelLayout& layout, float spawnX, float spawnY, int playerIndex)
 {
@@ -73,6 +104,8 @@ dae::GameObject* tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
     }
 
     dae::GameObject* ptr = playerGO.get();
-    scene.Add(std::move(playerGO));
+    scene.Add(std::move(playerGO)); // tank must be in scene before setting parent
+    CreateGun(scene, ptr, layout, playerIndex);
     return ptr;
 }
+

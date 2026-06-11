@@ -133,3 +133,10 @@ void dae::InputManager::ClearCommands()
 	m_ControllerCommands.clear();
 	m_KeyboardCommands.clear();
 }
+
+glm::vec2 dae::InputManager::GetRightStick(unsigned int controllerIndex) const
+{
+	if (controllerIndex >= MAX_CONTROLLERS) 
+		return { 0.f, 0.f };
+	return m_Controllers[controllerIndex]->GetRightStick();
+}
