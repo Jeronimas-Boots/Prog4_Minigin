@@ -10,6 +10,7 @@
 
 #include <glm/glm.hpp>
 #include <cmath>
+#include <iostream>
 
 namespace dae
 {
