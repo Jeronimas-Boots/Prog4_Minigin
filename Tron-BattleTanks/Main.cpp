@@ -37,9 +37,10 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+static tron::LevelManager g_LevelManager; // this is not the best but works for now should fix this soon though!!!! this is so it works on emscripten
+
 static void load()
 {
-	static tron::LevelManager levelManager; // static so it keeps existing even when going out of scope
 
 	auto onQuit = []()
 		{
@@ -50,13 +51,13 @@ static void load()
 
 	auto onStart = [](tron::GameMode mode)
 		{
-			levelManager.LoadLevel(1, mode);
+			g_LevelManager.LoadLevel(1, mode);
 		};
 
-	levelManager.RegisterLevel(std::make_unique<tron::MainMenu>(onStart, onQuit));
-	levelManager.RegisterLevel(std::make_unique<tron::Level0>());
+	g_LevelManager.RegisterLevel(std::make_unique<tron::MainMenu>(onStart, onQuit));
+	g_LevelManager.RegisterLevel(std::make_unique<tron::Level0>());
 
-	levelManager.LoadLevel(0);
+	g_LevelManager.LoadLevel(0);
 
 	/*auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
