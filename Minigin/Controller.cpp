@@ -135,8 +135,24 @@ namespace dae
 
 			int count = 0;
 			SDL_JoystickID* joysticks = SDL_GetJoysticks(&count);
+
+			std::cout << "Controller " << m_ControllerIndex
+				<< ": " << count << " joystick(s) found\n";
+
 			if (joysticks && static_cast<int>(m_ControllerIndex) < count)
-				m_Gamepad = SDL_OpenGamepad(joysticks[m_ControllerIndex]);
+			{
+				if (SDL_IsGamepad(joysticks[m_ControllerIndex]))
+				{
+					m_Gamepad = SDL_OpenGamepad(joysticks[m_ControllerIndex]);
+					std::cout << "Controller " << m_ControllerIndex
+						<< " opened: " << (m_Gamepad ? "success" : SDL_GetError()) << "\n";
+				}
+				else
+				{
+					std::cout << "Joystick " << m_ControllerIndex
+						<< " is not a gamepad\n";
+				}
+			}
 			SDL_free(joysticks);
 		}
 #endif
