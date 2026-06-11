@@ -127,3 +127,9 @@ void dae::InputManager::UnbindCommand(SDL_Scancode scancode, KeyState keyState)
 	KeyboardKey key{ scancode, keyState };
 	m_KeyboardCommands.erase(key);
 }
+
+void dae::InputManager::ClearCommands()
+{
+	m_ControllerCommands.clear();
+	m_KeyboardCommands.clear();
+}

@@ -12,6 +12,9 @@
 
 void tron::Level0::Load(dae::Scene& scene, GameMode /*mode*/ )
 {
+    // ensure that no commands from another level stay alive
+    dae::InputManager::GetInstance().ClearCommands();
+
     // Background
     auto backgroundGO = std::make_unique<dae::GameObject>();
     backgroundGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(backgroundGO.get(), 0.f, 0.f, 0.f));

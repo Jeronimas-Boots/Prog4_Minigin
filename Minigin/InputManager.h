@@ -32,6 +32,8 @@ namespace dae
 		void BindCommand(SDL_Scancode key, KeyState keyState, std::unique_ptr<Command> command);
 		void UnbindCommand(SDL_Scancode key, KeyState keyState);
 
+		void ClearCommands();
+
 	private:
 		struct ControllerKey
 		{
