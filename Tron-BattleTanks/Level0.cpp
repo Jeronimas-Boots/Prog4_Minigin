@@ -7,7 +7,7 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include "TankBuilder.h"
-#include "inputManager.h"
+#include "InputManager.h"
 
 void tron::Level0::Load(dae::Scene& scene, GameMode mode )
 {
