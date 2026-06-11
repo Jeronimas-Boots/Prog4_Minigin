@@ -28,12 +28,6 @@ void tron::GridMovementComponent::Update(float deltaTime)
         {
             SnapToTarget();
             m_IsMoving = false;
-
-            if (m_BufferedDirection != glm::vec2{ 0.f, 0.f })
-            {
-                StartMove(m_BufferedDirection);
-                m_BufferedDirection = { 0.f, 0.f };
-            }
         }
         else
         {
@@ -44,22 +38,12 @@ void tron::GridMovementComponent::Update(float deltaTime)
             );
         }
     }
-    else
-    {
-        if (m_BufferedDirection != glm::vec2{ 0.f, 0.f })
-        {
-            StartMove(m_BufferedDirection);
-            m_BufferedDirection = { 0.f, 0.f };
-        }
-    }
 }
 
 void tron::GridMovementComponent::RequestMove(const glm::vec2& direction)
 {
     if (!m_IsMoving)
         StartMove(direction);
-    else
-        m_BufferedDirection = direction;
 }
 
 void tron::GridMovementComponent::Stopmove()
