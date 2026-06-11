@@ -12,6 +12,14 @@
 
 void tron::Level0::Load(dae::Scene& scene, GameMode /*mode*/ )
 {
+    // Background
+    auto backgroundGO = std::make_unique<dae::GameObject>();
+    backgroundGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(backgroundGO.get(), 0.f, 0.f, 0.f));
+    backgroundGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
+        backgroundGO.get(),
+        dae::ResourceManager::GetInstance().LoadTexture("background.png")));
+    scene.Add(std::move(backgroundGO));
+
     auto grid = dae::ResourceManager::GetInstance().LoadCSV(GetCSVPath());
     auto layout = tron::LevelBuilder::BuildScene(scene, grid);
 

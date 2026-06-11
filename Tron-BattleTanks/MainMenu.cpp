@@ -23,6 +23,15 @@ void tron::MainMenu::Load(dae::Scene& scene, GameMode /*mode*/)
     constexpr float startY = 150.f;
     constexpr float spacing = 60.f;
 
+    // Background
+    auto backgroundGO = std::make_unique<dae::GameObject>();
+    backgroundGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(backgroundGO.get(), 0.f, 0.f, 0.f));
+    backgroundGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
+        backgroundGO.get(),
+        dae::ResourceManager::GetInstance().LoadTexture("background.png")));
+    scene.Add(std::move(backgroundGO));
+
+
     // Title
     auto titleGO = std::make_unique<dae::GameObject>();
     titleGO->AddComponent<dae::TransformComponent>(
