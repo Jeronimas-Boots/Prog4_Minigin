@@ -12,7 +12,8 @@ namespace tron
         Void = 1,
         Path = 2,
         Teleport = 3,
-        EnemySpawn = 4,
+        EnemyTankSpawn = 4,
+        EnemyRecognizerSpawn = 5,
         PlayerSpawn = 6
     };
 

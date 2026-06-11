@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include "Level.h"
+#include "GameMode.h"
 
 namespace tron
 {
@@ -19,7 +20,7 @@ namespace tron
 
         void RegisterLevel(std::unique_ptr<Level> level);
 
-        void LoadLevel(int index);
+        void LoadLevel(int index, GameMode mode = GameMode::SinglePlayer);
         void NextLevel();
         void RestartLevel();
 

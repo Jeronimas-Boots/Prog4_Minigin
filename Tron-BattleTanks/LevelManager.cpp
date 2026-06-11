@@ -7,9 +7,9 @@ void tron::LevelManager::RegisterLevel(std::unique_ptr<Level> level)
     m_Levels.push_back(std::move(level));
 }
 
-void tron::LevelManager::LoadLevel(int index)
+void tron::LevelManager::LoadLevel(int index, tron::GameMode mode)
 {
-    assert(index >= 0 && index < static_cast<int>(m_Levels.size()) && "LevelManager: invalid level index");
+    assert(index >= 0 && index < static_cast<int>(m_Levels.size()));
 
     m_CurrentIndex = index;
 
@@ -17,7 +17,7 @@ void tron::LevelManager::LoadLevel(int index)
     sceneManager.ClearScenes();
     auto& scene = sceneManager.CreateScene();
 
-    m_Levels[m_CurrentIndex]->Load(scene);
+    m_Levels[m_CurrentIndex]->Load(scene, mode);
 }
 
 void tron::LevelManager::NextLevel()

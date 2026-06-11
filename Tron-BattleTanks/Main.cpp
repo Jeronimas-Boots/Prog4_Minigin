@@ -28,6 +28,8 @@
 
 #include "LevelManager.h"
 #include "Level0.h"
+#include "GameMode.h"
+#include "MainMenu.h"
 
 //#include "ServiceLocator.h"
 //#include "SDL_MixerSoundSystem.h"
@@ -37,14 +39,22 @@ namespace fs = std::filesystem;
 
 static void load()
 {
-	//dae::ServiceLocator::RegisterSoundSystem(
-	//	std::make_unique<dae::SDL_MixerSoundSystem>()
-	//);
-	//dae::ServiceLocator::GetSoundSystem().Play("Data/Sounds/End of Line.mp3", 0.5f, -1);
+	static tron::LevelManager levelManager; // static so it keeps existing even when going out of scope
 
-	tron::LevelManager levelManager;
+	auto onQuit = []()
+		{
+			SDL_Event quitEvent;
+			quitEvent.type = SDL_EVENT_QUIT;
+			SDL_PushEvent(&quitEvent);
+		};
+
+	auto onStart = [](tron::GameMode mode)
+		{
+			levelManager.LoadLevel(1, mode);
+		};
+
+	levelManager.RegisterLevel(std::make_unique<tron::MainMenu>(onStart, onQuit));
 	levelManager.RegisterLevel(std::make_unique<tron::Level0>());
-	// levelManager.RegisterLevel(std::make_unique<tron::Level02>());
 
 	levelManager.LoadLevel(0);
 

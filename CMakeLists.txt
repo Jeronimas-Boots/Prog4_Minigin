@@ -13,12 +13,10 @@ else()
   set(TARGET_PARAM WIN32)
 endif()
 
-# list source files here
 add_library(${TARGET_NAME} STATIC
   Minigin/Font.cpp
   Minigin/GameObject.cpp
   Minigin/InputManager.cpp
-  # Minigin/Main.cpp
   Minigin/Minigin.cpp
   Minigin/Renderer.cpp
   Minigin/ResourceManager.cpp
@@ -27,55 +25,50 @@ add_library(${TARGET_NAME} STATIC
   Minigin/TextObject.cpp
   Minigin/Texture2D.cpp
   Minigin/Transform.cpp
- "Minigin/MoveCommand.cpp" 
- "Minigin/Component.h" 
- "Minigin/FPSComponent.h" 
- "Minigin/FPSComponent.cpp" 
- "Minigin/TextComponent.h" 
- "Minigin/TextComponent.cpp" 
- "Minigin/TransformComponent.h"
- "Minigin/TransformComponent.cpp" 
- "Minigin/RenderComponent.h"
- "Minigin/RenderComponent.cpp"
- "Minigin/RotateComponent.cpp" 
- "Minigin/BenchMarkComponent.cpp"
- "Minigin/Command.h" 
- "Minigin/GameObjectCommand.h" 
- "Minigin/Controller.h" 
- "Minigin/Controller.cpp" 
- "Minigin/MoveCommand.h" 
- "Minigin/BenchMarkComponent.cpp" 
- "Minigin/Command.h" 
- "Minigin/GameObjectCommand.h" 
- "Minigin/Controller.h" 
- "Minigin/Controller.cpp" 
- "Minigin/MoveCommand.h" 
- "Minigin/MoveCommand.cpp" 
- "Minigin/HealthComponent.h" 
- "Minigin/HealthComponent.cpp"
- "Minigin/EventID.h" 
- "Minigin/Observer.h" 
- "Minigin/HealthUIComponent.h" 
- "Minigin/HealthUIComponent.cpp" 
- "Minigin/DamageCommand.h" 
- "Minigin/ScoreComponent.h" 
- "Minigin/ScoreComponent.cpp"
- "Minigin/ScoreUIComponent.h" 
- "Minigin/ScoreUIComponent.cpp" 
- "Minigin/ScoreCommand.h" 
- #"Minigin/SoundSystem.h" 
- #"Minigin/ServiceLocator.h" 
- #"Minigin/ServiceLocator.cpp" 
- #"Minigin/SDL_MixerSoundSystem.h" 
- #"Minigin/SDL_MixerSoundSystem.cpp" 
- "Minigin/LevelLoader.h" 
- "Minigin/LevelLoader.cpp")
+  "Minigin/MoveCommand.cpp"
+  "Minigin/Component.h"
+  "Minigin/FPSComponent.h"
+  "Minigin/FPSComponent.cpp"
+  "Minigin/TextComponent.h"
+  "Minigin/TextComponent.cpp"
+  "Minigin/TransformComponent.h"
+  "Minigin/TransformComponent.cpp"
+  "Minigin/RenderComponent.h"
+  "Minigin/RenderComponent.cpp"
+  "Minigin/RotateComponent.cpp"
+  "Minigin/BenchMarkComponent.cpp"
+  "Minigin/Command.h"
+  "Minigin/GameObjectCommand.h"
+  "Minigin/Controller.h"
+  "Minigin/Controller.cpp"
+  "Minigin/MoveCommand.h"
+  "Minigin/MoveCommand.cpp"
+  "Minigin/HealthComponent.h"
+  "Minigin/HealthComponent.cpp"
+  "Minigin/EventID.h"
+  "Minigin/Observer.h"
+  "Minigin/HealthUIComponent.h"
+  "Minigin/HealthUIComponent.cpp"
+  "Minigin/DamageCommand.h"
+  "Minigin/ScoreComponent.h"
+  "Minigin/ScoreComponent.cpp"
+  "Minigin/ScoreUIComponent.h"
+  "Minigin/ScoreUIComponent.cpp"
+  "Minigin/ScoreCommand.h"
+  "Minigin/SoundSystem.h"
+  "Minigin/ServiceLocator.h"
+  "Minigin/ServiceLocator.cpp"
+  "Minigin/SDL_MixerSoundSystem.h"
+  "Minigin/SDL_MixerSoundSystem.cpp"
+  "Minigin/LevelLoader.h"
+  "Minigin/LevelLoader.cpp"
+)
 
-# enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
 
 include(FetchContent)
-# add glm
+
+# GLM
 find_package(glm CONFIG QUIET)
 if(NOT glm_FOUND)
   FetchContent_Declare(
@@ -87,10 +80,10 @@ if(NOT glm_FOUND)
   FetchContent_MakeAvailable(glm)
 endif()
 
-# Add SDL3
+# SDL3
 find_package(SDL3 3.4 CONFIG QUIET)
 if(NOT SDL3_FOUND)
-  if (WIN32)
+  if(WIN32)
     FetchContent_Declare(
       SDL3
       URL https://www.libsdl.org/release/SDL3-devel-3.4.0-VC.zip
@@ -112,10 +105,10 @@ if(NOT SDL3_FOUND)
   endif()
 endif()
 
-# Add SDL3_ttf
+# SDL3_ttf
 find_package(SDL3_ttf 3.2.2 CONFIG QUIET)
 if(NOT SDL3_ttf_FOUND)
-  if (WIN32)
+  if(WIN32)
     FetchContent_Declare(
       SDL3_ttf
       URL https://www.libsdl.org/projects/SDL_ttf/release/SDL3_ttf-devel-3.2.2-VC.zip
@@ -146,10 +139,10 @@ if(NOT SDL3_ttf_FOUND)
   endif()
 endif()
 
-# Add SDL3_mixer
+# SDL3_mixer — MP3 on native, Emscripten uses its own audio backend
 find_package(SDL3_mixer 3.2.0 CONFIG QUIET)
 if(NOT SDL3_mixer_FOUND)
-  if (WIN32)
+  if(WIN32)
     FetchContent_Declare(
       SDL3_mixer
       URL https://github.com/libsdl-org/SDL_mixer/releases/download/release-3.2.0/SDL3_mixer-devel-3.2.0-VC.zip
@@ -159,7 +152,7 @@ if(NOT SDL3_mixer_FOUND)
     FetchContent_MakeAvailable(SDL3_mixer)
     list(PREPEND CMAKE_PREFIX_PATH "${sdl3_mixer_SOURCE_DIR}")
     find_package(SDL3_mixer CONFIG REQUIRED)
-  else()
+  elseif(NOT EMSCRIPTEN)
     FetchContent_Declare(
       SDL3_mixer
       GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
@@ -169,9 +162,9 @@ if(NOT SDL3_mixer_FOUND)
     )
     set(SDLMIXER_VENDORED OFF)
     set(SDLMIXER_FLAC OFF)
-    set(SDLMIXER_MOD OFF)
-    set(SDLMIXER_MP3 ON)
-    set(SDLMIXER_OGG OFF)
+    set(SDLMIXER_MOD  OFF)
+    set(SDLMIXER_MP3  ON)   # we need MP3
+    set(SDLMIXER_OGG  OFF)
     set(SDLMIXER_OPUS OFF)
     FetchContent_MakeAvailable(SDL3_mixer)
   endif()
@@ -195,18 +188,15 @@ add_library(imgui STATIC
   ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
   ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp
 )
-
 target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${sdl3_SOURCE_DIR} include)
 target_link_libraries(imgui PUBLIC SDL3::SDL3)
-# enable c++20 features
 target_compile_features(imgui PUBLIC cxx_std_20)
 
-if (WIN32)
-  # Add VLD (Visual Leak Detector) for memory leak detection on Windows
+if(WIN32)
   find_package(VLD CONFIG)
 endif()
 
-target_include_directories("${TARGET_NAME}" PUBLIC 
+target_include_directories("${TARGET_NAME}" PUBLIC
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${glm_SOURCE_DIR}
   ${sdl3_SOURCE_DIR}/include
@@ -217,16 +207,19 @@ target_include_directories("${TARGET_NAME}" PUBLIC
   ${VLD_INCLUDE_DIR}
 )
 
-target_link_libraries("${TARGET_NAME}" PUBLIC 
-  SDL3::SDL3 
+target_link_libraries("${TARGET_NAME}" PUBLIC
+  SDL3::SDL3
   SDL3_ttf::SDL3_ttf
-   SDL3_mixer::SDL3_mixer
   imgui
   ${VLD_LIBRARIES}
 )
 
+# Link SDL3_mixer only on non-Emscripten — Emscripten bundles its own audio
+if(NOT EMSCRIPTEN)
+  target_link_libraries("${TARGET_NAME}" PUBLIC SDL3_mixer::SDL3_mixer)
+endif()
+
 if(MSVC)
-  # compile at warning level 4 + treat warnings as errors
   target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
 else()
   target_compile_options(${TARGET_NAME} PRIVATE -Wall -Wextra -Werror)
@@ -236,70 +229,67 @@ endif()
 # ============ GAME ============
 # ==============================
 
-# Executable for the game
 add_executable(Tron-BattleTanks WIN32
-"Tron-BattleTanks/Main.cpp" 
-"Tron-BattleTanks/TankState.h" 
-"Tron-BattleTanks/TankStateComponent.h" 
-"Tron-BattleTanks/TankStateComponent.cpp"
- "Tron-BattleTanks/StatesTank.cpp"  
- "Tron-BattleTanks/Level.h" 
- "Tron-BattleTanks/Level0.h"
- "Tron-BattleTanks/Level0.cpp"
- "Tron-BattleTanks/LevelBuilder.h" 
- "Tron-BattleTanks/LevelManager.h" 
- "Tron-BattleTanks/LevelManager.cpp"
- "Tron-BattleTanks/LevelBuilder.cpp" 
- "Tron-BattleTanks/GridMoveCommand.h"
- "Tron-BattleTanks/GridCollisionComponent.h" 
- "Tron-BattleTanks/GridCollisionComponent.cpp" 
- "Tron-BattleTanks/GridMovementComponent.h" 
- "Tron-BattleTanks/GridMovementComponent.cpp")
+  "Tron-BattleTanks/Main.cpp"
+  "Tron-BattleTanks/TankState.h"
+  "Tron-BattleTanks/TankStateComponent.h"
+  "Tron-BattleTanks/TankStateComponent.cpp"
+  "Tron-BattleTanks/StatesTank.cpp"
+  "Tron-BattleTanks/Level.h"
+  "Tron-BattleTanks/Level0.h"
+  "Tron-BattleTanks/Level0.cpp"
+  "Tron-BattleTanks/LevelBuilder.h"
+  "Tron-BattleTanks/LevelManager.h"
+  "Tron-BattleTanks/LevelManager.cpp"
+  "Tron-BattleTanks/LevelBuilder.cpp"
+  "Tron-BattleTanks/GridMoveCommand.h"
+  "Tron-BattleTanks/GridCollisionComponent.h"
+  "Tron-BattleTanks/GridCollisionComponent.cpp"
+  "Tron-BattleTanks/GridMovementComponent.h"
+  "Tron-BattleTanks/GridMovementComponent.cpp"
+  "Tron-BattleTanks/PlaySoundCommand.h"
+ "Tron-BattleTanks/GameMode.h" "Tron-BattleTanks/MenuState.h" "Tron-BattleTanks/StatesMenu.h" "Tron-BattleTanks/StatesMenu..cpp" "Tron-BattleTanks/MenuStateComponent.h" "Tron-BattleTanks/MenuStateComponent.cpp" "Tron-BattleTanks/MenuCommands.h" "Tron-BattleTanks/MainMenu.h" "Tron-BattleTanks/MainMenu.cpp")
 target_link_libraries(Tron-BattleTanks PRIVATE ${TARGET_NAME})
 
 if(EMSCRIPTEN)
-  set(EMSCRIPTEN_COMPILE_FLAGS "-g")
-  set(EMSCRIPTEN_LINK_FLAGS "-sUSE_SDL=3 -sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\"")
-
-  # Use the Emscripten toolchain
+  # -sUSE_SDL_MIXER=2 pulls in Emscripten's own mixer with MP3 support via mpg123
+  set(EMSCRIPTEN_COMPILE_FLAGS "-g -sUSE_SDL_MIXER=2 -sUSE_MPG123=1")
+  set(EMSCRIPTEN_LINK_FLAGS
+    "-sUSE_SDL=3 -sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1 \
+     -sUSE_SDL_MIXER=2 -sUSE_MPG123=1 \
+     -g -sALLOW_MEMORY_GROWTH \
+     --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\""
+  )
   set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmscriptenToolchain.cmake)
-
-  # Additional settings for Emscripten build
   set_target_properties(Tron-BattleTanks PROPERTIES
-      COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"
-      LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS}"
-      SUFFIX ".html"
+    COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"
+    LINK_FLAGS    "${EMSCRIPTEN_LINK_FLAGS}"
+    SUFFIX        ".html"
   )
-
   add_custom_command(TARGET Tron-BattleTanks POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/web" "$<TARGET_FILE_DIR:Tron-BattleTanks>/"
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory
+      "${CMAKE_CURRENT_SOURCE_DIR}/web"
+      "$<TARGET_FILE_DIR:Tron-BattleTanks>/"
   )
-
 elseif(WIN32)
-  # Set minigin as the default startup project
   set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Tron-BattleTanks)
-  # Set working directory to output folder
-  set_target_properties(Tron-BattleTanks PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:Tron-BattleTanks>")
+  set_target_properties(Tron-BattleTanks PROPERTIES
+    VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:Tron-BattleTanks>")
 
-  # Copy SDL dlls to output folder
-  set(SDL_RUNTIME_DLLS
-    SDL3::SDL3
-    SDL3_ttf::SDL3_ttf
-    SDL3_mixer::SDL3_mixer
-  )
-
+  set(SDL_RUNTIME_DLLS SDL3::SDL3 SDL3_ttf::SDL3_ttf SDL3_mixer::SDL3_mixer)
   foreach(dllTarget IN LISTS SDL_RUNTIME_DLLS)
-    add_custom_command(
-      TARGET Tron-BattleTanks POST_BUILD
+    add_custom_command(TARGET Tron-BattleTanks POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-          "$<TARGET_FILE:${dllTarget}>"
-          "$<TARGET_FILE_DIR:Tron-BattleTanks>"
+        "$<TARGET_FILE:${dllTarget}>"
+        "$<TARGET_FILE_DIR:Tron-BattleTanks>"
       VERBATIM
     )
   endforeach()
 
   add_custom_command(TARGET Tron-BattleTanks POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:Tron-BattleTanks>/Data"
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory
+      "${CMAKE_CURRENT_SOURCE_DIR}/Data"
+      "$<TARGET_FILE_DIR:Tron-BattleTanks>/Data"
   )
 elseif(APPLE)
   set_target_properties(Tron-BattleTanks PROPERTIES
@@ -308,21 +298,32 @@ elseif(APPLE)
     BUILD_WITH_INSTALL_RPATH TRUE
   )
   add_custom_command(TARGET Tron-BattleTanks POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E make_directory "$<TARGET_BUNDLE_DIR:Tron-BattleTanks>/Contents/Frameworks"
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:SDL3::SDL3-shared>" "$<TARGET_BUNDLE_DIR:Tron-BattleTanks>/Contents/Frameworks/"
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:SDL3_ttf::SDL3_ttf-shared>" "$<TARGET_BUNDLE_DIR:Tron-BattleTanks>/Contents/Frameworks/"
-    COMMAND install_name_tool -change "@rpath/libSDL3_ttf.0.dylib" "@executable_path/../Frameworks/libSDL3_ttf.0.2.2.dylib" "$<TARGET_FILE:Tron-BattleTanks>"
-    COMMAND install_name_tool -change "@rpath/libSDL3.0.dylib" "@executable_path/../Frameworks/libSDL3.0.dylib" "$<TARGET_FILE:Tron-BattleTanks>"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory
+      "$<TARGET_BUNDLE_DIR:Tron-BattleTanks>/Contents/Frameworks"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+      "$<TARGET_FILE:SDL3::SDL3-shared>"
+      "$<TARGET_BUNDLE_DIR:Tron-BattleTanks>/Contents/Frameworks/"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+      "$<TARGET_FILE:SDL3_ttf::SDL3_ttf-shared>"
+      "$<TARGET_BUNDLE_DIR:Tron-BattleTanks>/Contents/Frameworks/"
+    COMMAND install_name_tool -change
+      "@rpath/libSDL3_ttf.0.dylib"
+      "@executable_path/../Frameworks/libSDL3_ttf.0.2.2.dylib"
+      "$<TARGET_FILE:Tron-BattleTanks>"
+    COMMAND install_name_tool -change
+      "@rpath/libSDL3.0.dylib"
+      "@executable_path/../Frameworks/libSDL3.0.dylib"
+      "$<TARGET_FILE:Tron-BattleTanks>"
   )
-
-  # Copy Data folder to output directory after build
   add_custom_command(TARGET Tron-BattleTanks POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:Tron-BattleTanks>/Data"
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory
+      "${CMAKE_CURRENT_SOURCE_DIR}/Data"
+      "$<TARGET_FILE_DIR:Tron-BattleTanks>/Data"
   )
 else()
-
-  # Copy Data folder to output directory after build
   add_custom_command(TARGET Tron-BattleTanks POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:Tron-BattleTanks>/Data"
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory
+      "${CMAKE_CURRENT_SOURCE_DIR}/Data"
+      "$<TARGET_FILE_DIR:Tron-BattleTanks>/Data"
   )
 endif()

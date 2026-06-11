@@ -45,7 +45,7 @@ tron::LevelLayout tron::LevelBuilder::BuildScene(dae::Scene& scene,
             case TileType::Teleport:    
                 SpawnTile(scene, x, y, scale, "Level/teleport.png");
                 break;
-            case TileType::EnemySpawn:  
+            case TileType::EnemyTankSpawn:  
                 SpawnTile(scene, x, y, scale, "Level/path.png");    
                 break;
             case TileType::PlayerSpawn: 

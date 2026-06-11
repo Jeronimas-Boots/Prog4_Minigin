@@ -10,7 +10,7 @@
 #include "GameObject.h"
 #include "Scene.h"
 
-void tron::Level0::Load(dae::Scene& scene)
+void tron::Level0::Load(dae::Scene& scene, GameMode /*mode*/ )
 {
     auto grid = dae::ResourceManager::GetInstance().LoadCSV(GetCSVPath());
     auto layout = tron::LevelBuilder::BuildScene(scene, grid);
