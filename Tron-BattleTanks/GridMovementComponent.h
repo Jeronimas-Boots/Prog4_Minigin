@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include <glm/glm.hpp>
+#include "RenderComponent.h"
 
 namespace tron
 {
@@ -21,6 +22,7 @@ namespace tron
         void Stopmove();
 
     private:
+        dae::RenderComponent* m_pRenderComponent{ nullptr };
         GridCollisionComponent* m_Collision;
         float m_Speed;
 

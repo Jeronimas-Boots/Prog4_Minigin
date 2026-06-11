@@ -18,6 +18,8 @@ namespace dae
 		float GetRadius() const { return m_Radius; }
 		float GetSpeed() const { return m_Speed; }
 
+		
+
 	private:
 		float m_Radius;
 		float m_Speed;

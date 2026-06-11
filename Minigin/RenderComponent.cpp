@@ -27,7 +27,7 @@ void dae::RenderComponent::Render() const
         float texW{}, texH{};
         SDL_GetTextureSize(m_pTexture->GetSDLTexture(), &texW, &texH);
         Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y,
-            texW * m_ScaleX, texH * m_ScaleY);
+            texW * m_ScaleX, texH * m_ScaleY, m_Angle);
     }
 }
 

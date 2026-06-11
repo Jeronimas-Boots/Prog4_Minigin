@@ -4,12 +4,11 @@
 #include "TransformComponent.h"
 #include <cmath>
 
-tron::GridMovementComponent::GridMovementComponent(dae::GameObject* owner,
-    GridCollisionComponent* collision,
-    float speed)
+tron::GridMovementComponent::GridMovementComponent(dae::GameObject* owner, GridCollisionComponent* collision, float speed)
     : Component(owner)
     , m_Collision(collision)
     , m_Speed(speed)
+    , m_pRenderComponent(owner->GetComponent<dae::RenderComponent>())
 {
 }
 
@@ -83,7 +82,6 @@ void tron::GridMovementComponent::StartMove(const glm::vec2& direction)
 
     if (CanMoveTo(targetCollX, targetCollY))
     {
-        // Store target in render-space (subtract collision offset back out)
         m_TargetPosition = {
             targetCollX - m_CollisionOffset.x * tileSize,
             targetCollY - m_CollisionOffset.y * tileSize,
@@ -91,6 +89,15 @@ void tron::GridMovementComponent::StartMove(const glm::vec2& direction)
         };
         m_CurrentDirection = direction;
         m_IsMoving = true;
+
+        // Rotate sprite to match direction
+        if (m_pRenderComponent)
+        {
+            if (direction.x > 0.f) m_pRenderComponent->SetAngle(0.f);           // right
+            else if (direction.x < -0.f) m_pRenderComponent->SetAngle(180.f);   // left
+            else if (direction.y > 0.f) m_pRenderComponent->SetAngle(90.f);     // down
+            else                         m_pRenderComponent->SetAngle(270.f);   // up
+        }
     }
 }
 

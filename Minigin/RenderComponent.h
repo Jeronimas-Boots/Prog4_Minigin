@@ -14,10 +14,14 @@ namespace dae
 
 		void SetTexture(std::shared_ptr<Texture2D> texture);
 		void SetScale(float scaleX, float scaleY);
+
+		void SetAngle(float angle) { m_Angle = angle; }
 		
 	private:
 		std::shared_ptr<Texture2D> m_pTexture;
 		float m_ScaleX{ 1.f };
 		float m_ScaleY{ 1.f };
+
+		float m_Angle{ 0.f };
 	};
 }

@@ -41,9 +41,7 @@ dae::GameObject* tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
             std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ -1.f, 0.f }));
         input.BindCommand(SDL_SCANCODE_D, dae::KeyState::Pressed,
             std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 1.f, 0.f }));
-    }
-    else
-    {
+
         input.BindCommand(0, dae::ControllerButton::DPadUp, dae::KeyState::Pressed,
             std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 0.f, -1.f }));
         input.BindCommand(0, dae::ControllerButton::DPadDown, dae::KeyState::Pressed,
@@ -51,6 +49,26 @@ dae::GameObject* tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
         input.BindCommand(0, dae::ControllerButton::DPadLeft, dae::KeyState::Pressed,
             std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ -1.f, 0.f }));
         input.BindCommand(0, dae::ControllerButton::DPadRight, dae::KeyState::Pressed,
+            std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 1.f, 0.f }));
+    }
+    else
+    {
+        input.BindCommand(SDL_SCANCODE_UP, dae::KeyState::Pressed,
+            std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 0.f, -1.f }));
+        input.BindCommand(SDL_SCANCODE_DOWN, dae::KeyState::Pressed,
+            std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 0.f,  1.f }));
+        input.BindCommand(SDL_SCANCODE_LEFT, dae::KeyState::Pressed,
+            std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ -1.f, 0.f }));
+        input.BindCommand(SDL_SCANCODE_RIGHT, dae::KeyState::Pressed,
+            std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 1.f, 0.f }));
+
+        input.BindCommand(1, dae::ControllerButton::DPadUp, dae::KeyState::Pressed,
+            std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 0.f, -1.f }));
+        input.BindCommand(1, dae::ControllerButton::DPadDown, dae::KeyState::Pressed,
+            std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 0.f,  1.f }));
+        input.BindCommand(1, dae::ControllerButton::DPadLeft, dae::KeyState::Pressed,
+            std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ -1.f, 0.f }));
+        input.BindCommand(1, dae::ControllerButton::DPadRight, dae::KeyState::Pressed,
             std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 1.f, 0.f }));
     }
 
