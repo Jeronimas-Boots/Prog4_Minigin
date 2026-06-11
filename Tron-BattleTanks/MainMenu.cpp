@@ -17,7 +17,7 @@ tron::MainMenu::MainMenu(std::function<void(GameMode)> onStart, std::function<vo
 
 void tron::MainMenu::Load(dae::Scene& scene, GameMode /*mode*/)
 {
-    dae::InputManager::GetInstance().ClearCommands();
+    //dae::InputManager::GetInstance().ClearCommands();
 
     auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 28);
 
