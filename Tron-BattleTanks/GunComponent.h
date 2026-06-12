@@ -14,6 +14,8 @@ namespace tron
 
         void Update(float deltaTime) override;
 
+        bool Shoot(const glm::vec2& direction);
+
     private:
         int m_ControllerIndex;
         dae::RenderComponent* m_pRenderComponent{ nullptr };

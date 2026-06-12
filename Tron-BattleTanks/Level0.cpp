@@ -8,9 +8,19 @@
 #include "Scene.h"
 #include "TankBuilder.h"
 #include "InputManager.h"
+#include "EnemyBuilder.h"
+#include "TankStateComponent.h"
 
 void tron::Level0::Load(dae::Scene& scene, GameMode mode )
 {
+    // Background
+    auto backgroundGO = std::make_unique<dae::GameObject>();
+    backgroundGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(backgroundGO.get(), 0.f, 0.f, 0.f));
+    backgroundGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
+        backgroundGO.get(),
+        dae::ResourceManager::GetInstance().LoadTexture("background.png")));
+    scene.Add(std::move(backgroundGO));
+
     dae::InputManager::GetInstance().ClearCommands();
 
     auto grid = dae::ResourceManager::GetInstance().LoadCSV(GetCSVPath());
@@ -41,12 +51,21 @@ void tron::Level0::Load(dae::Scene& scene, GameMode mode )
     }
 
     // Spawn players based on game mode
+    std::vector<dae::GameObject*> players;
+
     if (!playerSpawns.empty())
-        tron::CreatePlayer(scene, collision, layout,
-            playerSpawns[0].x, playerSpawns[0].y, 0);
+        players.push_back(tron::CreatePlayer(scene, collision, layout,
+            playerSpawns[0].x, playerSpawns[0].y, 0));
 
     if (mode == GameMode::CoOp || mode == GameMode::Versus)
         if (playerSpawns.size() >= 2)
-            tron::CreatePlayer(scene, collision, layout,
-                playerSpawns[1].x, playerSpawns[1].y, 1);
+            players.push_back(tron::CreatePlayer(scene, collision, layout,
+                playerSpawns[1].x, playerSpawns[1].y, 1));
+
+    // Spawn enemy tanks and target the player(s)
+    auto enemyTanks = tron::CreateEnemyTanks(scene, collision, layout);
+    for (auto* enemy : enemyTanks)
+    {
+        enemy->GetComponent<tron::TankStateComponent>()->SetTargets(players);
+    }
 }

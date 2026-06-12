@@ -7,10 +7,10 @@ namespace tron
 
 	class TankState
 	{
-	public: 
+	public:
 		virtual ~TankState() = default;
 		virtual std::unique_ptr<TankState> HandleInput(TankStateComponent& tank) { return nullptr; }
-		virtual std::unique_ptr<TankState> Update(TankStateComponent& tank) { return nullptr; }
+		virtual std::unique_ptr<TankState> Update(TankStateComponent& tank, float deltaTime) { return nullptr; }
 
 		virtual void OnEnter(TankStateComponent& tank) {}
 		virtual void OnExit(TankStateComponent& tank) {}

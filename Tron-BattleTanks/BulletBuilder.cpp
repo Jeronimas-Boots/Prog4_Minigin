@@ -10,7 +10,7 @@
 namespace
 {
     constexpr float kBulletSpeedMultiplier = 20.f;
-    constexpr float kBulletLifetime = 1.f;   
+    constexpr float kBulletLifetime = 2.5f;   
     constexpr float kExplosionLifetime = 0.3f;
 }
 

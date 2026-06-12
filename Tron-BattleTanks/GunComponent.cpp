@@ -26,6 +26,10 @@ void tron::GunComponent::Update(float deltaTime)
     if (m_FireCooldown > 0.f)
         m_FireCooldown -= deltaTime;
 
+    // Player-only: aim with right stick, fire on cooldown
+    if (m_ControllerIndex < 0)
+        return; // enemy guns are driven externally via Shoot()
+
     const auto& input = dae::InputManager::GetInstance();
     const glm::vec2 stick = input.GetRightStick(m_ControllerIndex);
 
@@ -41,11 +45,25 @@ void tron::GunComponent::Update(float deltaTime)
         const float rad = renderAngle * (glm::pi<float>() / 180.f);
         const glm::vec2 aimDirection{ std::cos(rad), std::sin(rad) };
 
-        const glm::vec3 spawnPos = GetOwner()->GetWorldPosition();
-
-        tron::SpawnBullet(*m_pScene, m_Collision, spawnPos, aimDirection,
-            renderAngle, m_TileSize, m_Scale);
-
-        m_FireCooldown = m_FireRate;
+        Shoot(aimDirection);
     }
+}
+
+bool tron::GunComponent::Shoot(const glm::vec2& direction)
+{
+    if (m_FireCooldown > 0.f) return false;
+    if (direction.x == 0.f && direction.y == 0.f) return false;
+
+    const float renderAngle = std::atan2(direction.y, direction.x) * (180.f / glm::pi<float>());
+
+    if (m_pRenderComponent)
+        m_pRenderComponent->SetAngle(renderAngle);
+
+    const glm::vec3 spawnPos = GetOwner()->GetWorldPosition();
+
+    tron::SpawnBullet(*m_pScene, m_Collision, spawnPos, direction,
+        renderAngle, m_TileSize, m_Scale);
+
+    m_FireCooldown = m_FireRate;
+    return true;
 }

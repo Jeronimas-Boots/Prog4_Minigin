@@ -23,7 +23,6 @@
 #include "ScoreComponent.h"
 #include "ScoreCommand.h"
 #include "TankStateComponent.h"
-#include "ToggleTargetCommand.h"
 #include "StatesTank.h"
 
 #include "LevelManager.h"
