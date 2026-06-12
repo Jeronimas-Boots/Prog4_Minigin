@@ -27,6 +27,8 @@ namespace tron
 		std::vector<dae::GameObject*> m_pTargets; // e.g. player tanks
 		float m_TargetRange = 200.f;
 
+		bool HasClearLineOfSight(const glm::vec3& from, const glm::vec2& direction, float distance) const;
+
 	public:
 		TankStateComponent(dae::GameObject* owner, std::unique_ptr<TankState> initialState,
 			GunComponent* gunComponent, GridCollisionComponent* collision, GridMovementComponent* movement);
@@ -44,5 +46,7 @@ namespace tron
 		GunComponent* GetGun() const { return m_pGunComponent; }
 		GridCollisionComponent* GetCollision() const { return m_pCollision; }
 		GridMovementComponent* GetMovement() const { return m_pMovement; }
+
+		glm::vec2 GetDirectionToNearestTargetInLineOfSight() const;
 	};
 }

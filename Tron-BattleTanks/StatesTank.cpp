@@ -12,8 +12,8 @@ void tron::TankShootState::OnEnter(TankStateComponent& stateComponent)
 
 std::unique_ptr<tron::TankState> tron::TankShootState::Update(TankStateComponent& tank, float /*deltaTime*/)
 {
-    // Shooting logic lives here
-    const glm::vec2 dir = tank.GetDirectionToNearestTarget();
+    // Only shoot if a target is in a clear straight line (no walls in between)
+    const glm::vec2 dir = tank.GetDirectionToNearestTargetInLineOfSight();
     auto* gun = tank.GetGun();
     if (gun && (dir.x != 0.f || dir.y != 0.f))
         gun->Shoot(dir);
@@ -38,8 +38,6 @@ std::unique_ptr<tron::TankState> tron::TankWanderState::Update(TankStateComponen
 
     if (movement && !movement->IsMoving())
     {
-        // Reached a tile boundary: consider turning at an intersection,
-        // or pick a new direction if obstructed.
         TryTurnAtIntersection(tank);
 
         if (!movement->RequestMove(m_WanderDirection))
@@ -49,8 +47,8 @@ std::unique_ptr<tron::TankState> tron::TankWanderState::Update(TankStateComponen
         }
     }
 
-    // If a target comes into range, transition to shooting
-    if (tank.IsTargetInRange()) {
+    const glm::vec2 dir = tank.GetDirectionToNearestTargetInLineOfSight();
+    if (dir.x != 0.f || dir.y != 0.f) {
         return std::make_unique<TankShootState>();
     }
 
