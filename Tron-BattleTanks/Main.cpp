@@ -30,8 +30,8 @@
 #include "GameMode.h"
 #include "MainMenu.h"
 
-//#include "ServiceLocator.h"
-//#include "SDL_MixerSoundSystem.h"
+#include "ServiceLocator.h"
+#include "SDL_MixerSoundSystem.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -247,7 +247,12 @@ int main(int, char*[]) {
 #endif
 	dae::Minigin engine(data_location);
 
+	dae::ServiceLocator::RegisterSoundSystem(
+		std::make_unique<dae::SDL_MixerSoundSystem>());
+
 	engine.Run(load);
+
+	dae::ServiceLocator::RegisterSoundSystem(nullptr);
 
     return 0;
 }

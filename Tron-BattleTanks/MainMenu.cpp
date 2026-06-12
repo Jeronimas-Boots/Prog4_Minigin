@@ -8,6 +8,8 @@
 #include "ResourceManager.h"
 #include "InputManager.h"
 #include "Scene.h"
+#include "ServiceLocator.h"
+#include "SDL_MixerSoundSystem.h"
 
 tron::MainMenu::MainMenu(std::function<void(GameMode)> onStart, std::function<void()> onQuit)
     : m_OnStart(std::move(onStart))
@@ -17,7 +19,10 @@ tron::MainMenu::MainMenu(std::function<void(GameMode)> onStart, std::function<vo
 
 void tron::MainMenu::Load(dae::Scene& scene, GameMode /*mode*/)
 {
-    //dae::InputManager::GetInstance().ClearCommands();
+    dae::InputManager::GetInstance().ClearCommands();
+
+    dae::ServiceLocator::GetSoundSystem().PlayMusic(
+        "Data/Sounds/End of Line (From TRON_ LegacyScore).mp3", 0.5f, -1);
 
     auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 28);
 

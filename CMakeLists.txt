@@ -55,11 +55,11 @@ add_library(${TARGET_NAME} STATIC
   "Minigin/ScoreUIComponent.h"
   "Minigin/ScoreUIComponent.cpp"
   "Minigin/ScoreCommand.h"
-  #"Minigin/SoundSystem.h"
-  #"Minigin/ServiceLocator.h"
-  #"Minigin/ServiceLocator.cpp"
-  #"Minigin/SDL_MixerSoundSystem.h"
-  #"Minigin/SDL_MixerSoundSystem.cpp"
+  "Minigin/SoundSystem.h"
+  "Minigin/ServiceLocator.h"
+  "Minigin/ServiceLocator.cpp"
+  "Minigin/SDL_MixerSoundSystem.h"
+  "Minigin/SDL_MixerSoundSystem.cpp"
   "Minigin/LevelLoader.h"
   "Minigin/LevelLoader.cpp"
  "Minigin/LifetimeComponent.h" "Minigin/LifetimeComponent.cpp")
@@ -139,7 +139,7 @@ if(NOT SDL3_ttf_FOUND)
   endif()
 endif()
 
-# SDL3_mixer — MP3 on native, Emscripten uses its own audio backend
+# SDL3_mixer
 find_package(SDL3_mixer 3.2.0 CONFIG QUIET)
 if(NOT SDL3_mixer_FOUND)
   if(WIN32)
@@ -152,7 +152,8 @@ if(NOT SDL3_mixer_FOUND)
     FetchContent_MakeAvailable(SDL3_mixer)
     list(PREPEND CMAKE_PREFIX_PATH "${sdl3_mixer_SOURCE_DIR}")
     find_package(SDL3_mixer CONFIG REQUIRED)
-  elseif(NOT EMSCRIPTEN)
+  else()
+    # Covers both Linux and Emscripten — build from source
     FetchContent_Declare(
       SDL3_mixer
       GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
@@ -160,15 +161,18 @@ if(NOT SDL3_mixer_FOUND)
       GIT_SHALLOW TRUE
       GIT_PROGRESS TRUE
     )
-    set(SDLMIXER_VENDORED OFF)
+    set(SDLMIXER_VENDORED ON)
     set(SDLMIXER_FLAC OFF)
     set(SDLMIXER_MOD  OFF)
-    set(SDLMIXER_MP3  ON)   # we need MP3
+    set(SDLMIXER_MP3  ON)
     set(SDLMIXER_OGG  OFF)
     set(SDLMIXER_OPUS OFF)
     FetchContent_MakeAvailable(SDL3_mixer)
   endif()
 endif()
+
+get_target_property(MIXER_INCLUDES SDL3_mixer::SDL3_mixer INTERFACE_INCLUDE_DIRECTORIES)
+message(STATUS "SDL3_mixer includes: ${MIXER_INCLUDES}")
 
 # Dear ImGui
 FetchContent_Declare(
@@ -202,7 +206,6 @@ target_include_directories("${TARGET_NAME}" PUBLIC
   ${sdl3_SOURCE_DIR}/include
   ${sdl3_image_SOURCE_DIR}/include
   ${sdl3_ttf_SOURCE_DIR}/include
-  ${sdl3_mixer_SOURCE_DIR}/include
   ${imgui_SOURCE_DIR}
   ${VLD_INCLUDE_DIR}
 )
@@ -210,14 +213,10 @@ target_include_directories("${TARGET_NAME}" PUBLIC
 target_link_libraries("${TARGET_NAME}" PUBLIC
   SDL3::SDL3
   SDL3_ttf::SDL3_ttf
+  SDL3_mixer::SDL3_mixer
   imgui
   ${VLD_LIBRARIES}
 )
-
-# Link SDL3_mixer only on non-Emscripten — Emscripten bundles its own audio
-if(NOT EMSCRIPTEN)
-  target_link_libraries("${TARGET_NAME}" PUBLIC SDL3_mixer::SDL3_mixer)
-endif()
 
 if(MSVC)
   target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
@@ -270,9 +269,12 @@ add_executable(Tron-BattleTanks WIN32
 target_link_libraries(Tron-BattleTanks PRIVATE ${TARGET_NAME})
 
 if(EMSCRIPTEN)
-  # -sUSE_SDL_MIXER=2 pulls in Emscripten's own mixer with MP3 support via mpg123
-  set(EMSCRIPTEN_COMPILE_FLAGS "-g -sUSE_SDL_MIXER=2 -sUSE_MPG123=1")
-  set(EMSCRIPTEN_LINK_FLAGS "-sUSE_SDL=3 -sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1 -g -sALLOW_MEMORY_GROWTH --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\" -sFORCE_FILESYSTEM=1")
+  set(EMSCRIPTEN_COMPILE_FLAGS "-g")
+  set(EMSCRIPTEN_LINK_FLAGS
+    "-sUSE_SDL=3 -sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1 -g \
+     -sALLOW_MEMORY_GROWTH \
+     --preload-file \"${CMAKE_SOURCE_DIR}/Data@/\" \
+     -sFORCE_FILESYSTEM=1")
   set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmscriptenToolchain.cmake)
   set_target_properties(Tron-BattleTanks PROPERTIES
     COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"

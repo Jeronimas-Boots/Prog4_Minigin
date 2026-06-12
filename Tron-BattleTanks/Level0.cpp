@@ -10,9 +10,14 @@
 #include "InputManager.h"
 #include "EnemyBuilder.h"
 #include "TankStateComponent.h"
+#include "ServiceLocator.h"
+#include "SDL_MixerSoundSystem.h"
 
 void tron::Level0::Load(dae::Scene& scene, GameMode mode )
 {
+    dae::ServiceLocator::GetSoundSystem().PlayMusic(
+        "Data/Sounds/The Son of Flynn (From TRON_ LegacyScore).mp3", 0.5f, -1);
+
     // Background
     auto backgroundGO = std::make_unique<dae::GameObject>();
     backgroundGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(backgroundGO.get(), 0.f, 0.f, 0.f));
