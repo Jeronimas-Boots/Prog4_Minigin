@@ -20,7 +20,7 @@ namespace tron
 
 	private:
 		glm::vec2 m_WanderDirection{ 1.f, 0.f };
-		float m_DirectionChangeTimer = 0.f;
-		float m_DirectionChangeInterval = 1.5f;
+
+		void PickNewDirection(TankStateComponent& tank);
 	};
 }

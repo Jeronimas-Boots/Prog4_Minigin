@@ -16,10 +16,11 @@ namespace tron
 
         void Update(float deltaTime) override;
 
-        void RequestMove(const glm::vec2& direction);
+        bool RequestMove(const glm::vec2& direction);
 
         bool IsMoving() const { return m_IsMoving; }
         void Stopmove();
+        bool CanMove(const glm::vec2& direction) const;
 
     private:
         dae::RenderComponent* m_pRenderComponent{ nullptr };

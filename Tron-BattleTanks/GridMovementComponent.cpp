@@ -40,16 +40,33 @@ void tron::GridMovementComponent::Update(float deltaTime)
     }
 }
 
-void tron::GridMovementComponent::RequestMove(const glm::vec2& direction)
+bool tron::GridMovementComponent::RequestMove(const glm::vec2& direction)
 {
     if (!m_IsMoving)
+    {
         StartMove(direction);
+        return m_IsMoving;
+    }
+    return true;
 }
 
 void tron::GridMovementComponent::Stopmove()
 {
     m_BufferedDirection = { 0.f, 0.f };
     m_CurrentDirection = { 0.f, 0.f };
+}
+
+bool tron::GridMovementComponent::CanMove(const glm::vec2& direction) const
+{
+    if (direction == glm::vec2{ 0.f, 0.f }) return false;
+
+    const float tileSize = m_Collision->GetTileSize();
+    const glm::vec3 collAnchor = GetFootprintAnchor();
+
+    const float targetCollX = collAnchor.x + direction.x * tileSize;
+    const float targetCollY = collAnchor.y + direction.y * tileSize;
+
+    return CanMoveTo(targetCollX, targetCollY);
 }
 
 void tron::GridMovementComponent::StartMove(const glm::vec2& direction)
