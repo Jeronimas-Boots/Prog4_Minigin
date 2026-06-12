@@ -22,5 +22,6 @@ namespace tron
 		glm::vec2 m_WanderDirection{ 1.f, 0.f };
 
 		void PickNewDirection(TankStateComponent& tank);
+		void TryTurnAtIntersection(TankStateComponent& tank);
 	};
 }
