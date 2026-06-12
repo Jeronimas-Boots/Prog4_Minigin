@@ -9,8 +9,10 @@
 #include "ResourceManager.h"
 #include "InputManager.h"
 #include "GunComponent.h"
+#include "GridCollisionComponent.h"
 
-static dae::GameObject* CreateGun(dae::Scene& scene, dae::GameObject* tankGO, const tron::LevelLayout& layout, int playerIndex)
+static dae::GameObject* CreateGun(dae::Scene& scene, dae::GameObject* tankGO, tron::GridCollisionComponent* collision, const tron::LevelLayout& layout, int playerIndex)
+
 {
     const std::string texture = playerIndex == 0 ? "BlueTankGun.png" : "RedTankGun.png";
 
@@ -31,7 +33,8 @@ static dae::GameObject* CreateGun(dae::Scene& scene, dae::GameObject* tankGO, co
     gunGO->GetComponent<dae::RenderComponent>()->SetScale(layout.scale, layout.scale);
 
     gunGO->AddComponent<tron::GunComponent>(
-        std::make_unique<tron::GunComponent>(gunGO.get(), playerIndex));
+        std::make_unique<tron::GunComponent>(
+            gunGO.get(), playerIndex, &scene, collision, layout.tileSize, layout.scale));
 
     gunGO->SetParent(tankGO, false);
 
@@ -105,7 +108,7 @@ dae::GameObject* tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
 
     dae::GameObject* ptr = playerGO.get();
     scene.Add(std::move(playerGO)); // tank must be in scene before setting parent
-    CreateGun(scene, ptr, layout, playerIndex);
+    CreateGun(scene, ptr, collision, layout, playerIndex);
     return ptr;
 }
 

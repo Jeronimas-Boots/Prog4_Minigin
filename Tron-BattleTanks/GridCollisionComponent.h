@@ -12,6 +12,7 @@ namespace tron
             float tileSize, float offsetX, float offsetY);
 
         bool IsWalkable(float worldX, float worldY) const;
+        bool IsWall(float worldX, float worldY) const;
 
         float GetTileSize()  const { return m_TileSize; }
         float GetOffsetX()   const { return m_OffsetX; }
