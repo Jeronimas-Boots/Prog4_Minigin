@@ -240,11 +240,12 @@ namespace dae
         std::queue<SoundMessage> m_Queue;
         std::mutex               m_Mutex;
         std::mutex               m_TrackMutex;
-        bool                     m_Quit{ false };
+        
 
 #ifndef __EMSCRIPTEN__
         std::condition_variable m_Condition;
         std::thread             m_Thread;
+        bool                     m_Quit{ false };
 #endif
     };
 
