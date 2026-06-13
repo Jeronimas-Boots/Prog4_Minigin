@@ -17,7 +17,7 @@ tron::MainMenu::MainMenu(std::function<void(GameMode)> onStart, std::function<vo
 {
 }
 
-void tron::MainMenu::Load(dae::Scene& scene, GameMode /*mode*/)
+void tron::MainMenu::Load(dae::Scene& scene, GameMode /*mode*/, LevelManager* /*levelManager*/)
 {
     dae::InputManager::GetInstance().ClearCommands();
 

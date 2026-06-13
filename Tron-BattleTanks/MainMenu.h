@@ -5,12 +5,13 @@
 
 namespace tron
 {
+    class LevelManager;
     class MainMenu final : public Level
     {
     public:
         MainMenu(std::function<void(GameMode)> onStart, std::function<void()> onQuit);
 
-        void Load(dae::Scene& scene, GameMode mode = GameMode::SinglePlayer) override;
+        void Load(dae::Scene& scene, GameMode mode, LevelManager* levelManager) override;
         std::string GetCSVPath() const override 
         { 
             return ""; 

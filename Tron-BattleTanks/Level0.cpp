@@ -13,9 +13,18 @@
 #include "ServiceLocator.h"
 #include "SDL_MixerSoundSystem.h"
 #include "GunComponent.h"
+#include "LevelManager.h"
+#include "NextLevelCommand.h"
 
-void tron::Level0::Load(dae::Scene& scene, GameMode mode)
+tron::Level0::Level0(const std::string& levelPath)
+    : m_LevelPath(levelPath)
 {
+}
+
+void tron::Level0::Load(dae::Scene& scene, GameMode mode, LevelManager* levelManager)
+{
+    // Debug: cycle levels
+
     dae::ServiceLocator::GetSoundSystem().PlayMusic(
         "Data/Sounds/The Son of Flynn (From TRON_ LegacyScore).mp3", 0.5f, -1);
 
@@ -69,15 +78,24 @@ void tron::Level0::Load(dae::Scene& scene, GameMode mode)
             playerTanks.push_back(pt);
         }
 
-    // Create enemies once
     auto enemyTanks = tron::CreateEnemyTanks(scene, collision, layout);
 
-    // Give enemies their targets (players)
-    for (auto* enemy : enemyTanks)
-        enemy->GetComponent<tron::TankStateComponent>()->SetTargets(players);
+    std::vector<dae::GameObject*> enemyGameObjects;
+    for (auto& et : enemyTanks)
+    {
+        enemyGameObjects.push_back(et.tank);
+        et.tank->GetComponent<tron::TankStateComponent>()->SetTargets(players);
 
-    // Give player guns their targets (enemies)
+        if (et.gun)
+            et.gun->SetBulletTargets(players);
+    }
+
     for (auto& pt : playerTanks)
         if (pt.gun)
-            pt.gun->SetBulletTargets(enemyTanks);
+            pt.gun->SetBulletTargets(enemyGameObjects);
+
+
+    auto& input = dae::InputManager::GetInstance();
+    input.BindCommand(SDL_SCANCODE_F1, dae::KeyState::Down,
+        std::make_unique<tron::NextLevelCommand>(levelManager));
 }

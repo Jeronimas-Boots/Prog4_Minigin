@@ -1,15 +1,18 @@
 #pragma once	
 #include "Level.h"
 #include "LevelBuilder.h"
-
+#include <string>
 namespace tron
 {
+	class LevelManager;
 	class Level0 final : public Level
 	{
 	public:
-		void Load(dae::Scene& scene, GameMode mode = GameMode::SinglePlayer) override;
-		std::string GetCSVPath() const override { return "Level/LevelLayout0.csv"; }
+		Level0(const std::string& levelPath);
+		void Load(dae::Scene& scene, GameMode mode, LevelManager* levelManager) override;
+		std::string GetCSVPath() const override { return m_LevelPath; }
 
 	private:
+		const std::string m_LevelPath;
 	};
 }

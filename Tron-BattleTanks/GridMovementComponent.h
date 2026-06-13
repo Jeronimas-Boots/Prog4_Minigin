@@ -22,6 +22,8 @@ namespace tron
         void Stopmove();
         bool CanMove(const glm::vec2& direction) const;
 
+        void Reset();
+
     private:
         dae::RenderComponent* m_pRenderComponent{ nullptr };
         GridCollisionComponent* m_Collision;

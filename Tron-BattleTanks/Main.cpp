@@ -54,7 +54,9 @@ static void load()
 		};
 
 	g_LevelManager.RegisterLevel(std::make_unique<tron::MainMenu>(onStart, onQuit));
-	g_LevelManager.RegisterLevel(std::make_unique<tron::Level0>());
+	g_LevelManager.RegisterLevel(std::make_unique<tron::Level0>("Level/LevelLayout0.csv"));
+	g_LevelManager.RegisterLevel(std::make_unique<tron::Level0>("Level/LevelLayout1.csv"));
+	g_LevelManager.RegisterLevel(std::make_unique<tron::Level0>("Level/LevelLayout2.csv"));
 
 	g_LevelManager.LoadLevel(0);
 

@@ -52,7 +52,7 @@ std::vector<std::pair<int, int>> FindEnemyTankSpawnBlocks(const std::vector<std:
 }
 
 
-static dae::GameObject* CreateEnemyGun(dae::Scene& scene, dae::GameObject* tankGO, tron::GridCollisionComponent* collision, const tron::LevelLayout& layout)
+static tron::GunComponent* CreateEnemyGun(dae::Scene& scene, dae::GameObject* tankGO, tron::GridCollisionComponent* collision, const tron::LevelLayout& layout)
 {
     auto gunGO = std::make_unique<dae::GameObject>();
 
@@ -76,14 +76,14 @@ static dae::GameObject* CreateEnemyGun(dae::Scene& scene, dae::GameObject* tankG
 
     gunGO->SetParent(tankGO, false);
 
-    dae::GameObject* ptr = gunGO.get();
+    auto* gunComponent = gunGO->GetComponent<tron::GunComponent>();
     scene.Add(std::move(gunGO));
-    return ptr;
+    return gunComponent;
 }
 
-std::vector<dae::GameObject*> tron::CreateEnemyTanks(dae::Scene& scene, GridCollisionComponent* collision, const LevelLayout& layout)
+std::vector<tron::EnemyTank> tron::CreateEnemyTanks(dae::Scene& scene, GridCollisionComponent* collision, const LevelLayout& layout)
 {
-    std::vector<dae::GameObject*> spawnedTanks;
+    std::vector<tron::EnemyTank> spawnedTanks;
 
     // layout.tileSize is already TILE_SIZE * scale (the scaled tile size in world units)
     for (const auto& [col, row] : FindEnemyTankSpawnBlocks(layout.grid))
@@ -105,7 +105,7 @@ std::vector<dae::GameObject*> tron::CreateEnemyTanks(dae::Scene& scene, GridColl
         enemyGO->GetComponent<dae::RenderComponent>()->SetScale(layout.scale, layout.scale);
 
         enemyGO->AddComponent<dae::HealthComponent>(
-            std::make_unique<dae::HealthComponent>(enemyGO.get(), 0)); // 1 hit kill
+            std::make_unique<dae::HealthComponent>(enemyGO.get(), 0));
 
         enemyGO->AddComponent<dae::RectColliderComponent>(
             std::make_unique<dae::RectColliderComponent>(enemyGO.get(), 0.f, 0.f, "enemy"));
@@ -116,16 +116,16 @@ std::vector<dae::GameObject*> tron::CreateEnemyTanks(dae::Scene& scene, GridColl
                 enemyGO.get(), collision, layout.tileSize * 6.f)); // slightly slower than player
 
         dae::GameObject* ptr = enemyGO.get();
-        scene.Add(std::move(enemyGO)); // must be in scene before adding gun as a child
+        scene.Add(std::move(enemyGO));
 
-        auto* gun = CreateEnemyGun(scene, ptr, collision, layout);
-        auto* gunComponent = gun->GetComponent<tron::GunComponent>();
+        auto* gunComponent = CreateEnemyGun(scene, ptr, collision, layout);
 
         ptr->AddComponent<tron::TankStateComponent>(
             std::make_unique<tron::TankStateComponent>(
-                ptr, std::make_unique<tron::TankWanderState>(), gunComponent, collision, movement));
+                ptr, std::make_unique<tron::TankWanderState>(),
+                gunComponent, collision, movement));
 
-        spawnedTanks.push_back(ptr);
+        spawnedTanks.push_back({ ptr, gunComponent });
     }
 
     return spawnedTanks;

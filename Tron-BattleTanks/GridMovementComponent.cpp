@@ -69,6 +69,14 @@ bool tron::GridMovementComponent::CanMove(const glm::vec2& direction) const
     return CanMoveTo(targetCollX, targetCollY);
 }
 
+void tron::GridMovementComponent::Reset()
+{
+    m_IsMoving = false;
+    m_CurrentDirection = { 0.f, 0.f };
+    m_BufferedDirection = { 0.f, 0.f };
+    m_TargetPosition = { 0.f, 0.f, 0.f };
+}
+
 void tron::GridMovementComponent::StartMove(const glm::vec2& direction)
 {
     if (direction == glm::vec2{ 0.f, 0.f }) return;
