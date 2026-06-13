@@ -16,7 +16,6 @@ namespace dae
     class RectColliderComponent final : public Component
     {
     public:
-        // Pass 0,0 to auto-size from RenderComponent
         RectColliderComponent(GameObject* owner, float width = 0.f, float height = 0.f, std::string tag = "");
 
         Rect GetWorldRect() const;

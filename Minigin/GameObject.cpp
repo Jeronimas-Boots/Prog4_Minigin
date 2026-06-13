@@ -1,17 +1,7 @@
 #include "GameObject.h"
 #include <algorithm>
 
-dae::GameObject::~GameObject()
-{
-	for (auto* child : m_Children)
-	{
-		child->SetParent(nullptr);
-	}
-	if (m_Parent)
-	{
-		m_Parent->RemoveChild(this);
-	}
-}
+dae::GameObject::~GameObject() = default;
 
 bool dae::GameObject::IsChild(GameObject* parent) const
 {

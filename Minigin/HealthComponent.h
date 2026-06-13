@@ -19,6 +19,8 @@ namespace dae
 		void AddObserver(Observer* observer);
 		void RemoveObserver(Observer* observer);
 
+		bool IsDead() { return m_Lives < 0; }
+
 	protected:
 		void NotifyObservers(unsigned int eventId);
 	private:

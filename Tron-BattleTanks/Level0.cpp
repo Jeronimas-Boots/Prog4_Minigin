@@ -23,10 +23,7 @@ tron::Level0::Level0(const std::string& levelPath)
 
 void tron::Level0::Load(dae::Scene& scene, GameMode mode, LevelManager* levelManager)
 {
-    // Debug: cycle levels
-
-    dae::ServiceLocator::GetSoundSystem().PlayMusic(
-        "Data/Sounds/The Son of Flynn (From TRON_ LegacyScore).mp3", 0.5f, -1);
+    
 
     auto backgroundGO = std::make_unique<dae::GameObject>();
     backgroundGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(backgroundGO.get(), 0.f, 0.f, 0.f));
@@ -94,7 +91,7 @@ void tron::Level0::Load(dae::Scene& scene, GameMode mode, LevelManager* levelMan
         if (pt.gun)
             pt.gun->SetBulletTargets(enemyGameObjects);
 
-
+    // Debug: cycle levels
     auto& input = dae::InputManager::GetInstance();
     input.BindCommand(SDL_SCANCODE_F1, dae::KeyState::Down,
         std::make_unique<tron::NextLevelCommand>(levelManager));

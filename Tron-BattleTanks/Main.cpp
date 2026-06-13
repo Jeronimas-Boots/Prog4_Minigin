@@ -249,12 +249,12 @@ int main(int, char*[]) {
 #endif
 	dae::Minigin engine(data_location);
 
-	dae::ServiceLocator::RegisterSoundSystem(
-		std::make_unique<dae::SDL_MixerSoundSystem>());
+	/*dae::ServiceLocator::RegisterSoundSystem(
+		std::make_unique<dae::SDL_MixerSoundSystem>());*/
 
 	engine.Run(load);
 
-	dae::ServiceLocator::RegisterSoundSystem(nullptr);
+	//dae::ServiceLocator::RegisterSoundSystem(nullptr);
 
     return 0;
 }

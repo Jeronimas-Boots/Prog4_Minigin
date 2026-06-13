@@ -267,7 +267,7 @@ add_executable(Tron-BattleTanks WIN32
  "Tron-BattleTanks/BulletBuilder.h" 
  "Tron-BattleTanks/BulletBuilder.cpp" 
  "Tron-BattleTanks/EnemyBuilder.h" 
- "Tron-BattleTanks/EnemyBuilder.cpp" "Tron-BattleTanks/RespawnComponent.h" "Tron-BattleTanks/RespawnComponent.cpp" "Tron-BattleTanks/NextLevelCommand.h")
+ "Tron-BattleTanks/EnemyBuilder.cpp" "Tron-BattleTanks/RespawnComponent.h" "Tron-BattleTanks/RespawnComponent.cpp" "Tron-BattleTanks/NextLevelCommand.h" "Tron-BattleTanks/GunShootCommand.h" "Tron-BattleTanks/GunShootCommand.cpp")
 target_link_libraries(Tron-BattleTanks PRIVATE ${TARGET_NAME})
 
 if(EMSCRIPTEN)

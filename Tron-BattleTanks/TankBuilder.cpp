@@ -19,6 +19,7 @@
 #include "ScoreUIComponent.h"
 #include "LevelManager.h"
 #include "NextLevelCommand.h"
+#include "GunShootCommand.h"
 
 static tron::GunComponent* CreateGun(dae::Scene& scene, dae::GameObject* tankGO, tron::GridCollisionComponent* collision, const tron::LevelLayout& layout, int playerIndex)
 
@@ -102,7 +103,7 @@ tron::PlayerTank tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
 
         scene.Add(std::move(player1HPUI));
         scene.Add(std::move(player1ScoreUI));
-        
+
         input.BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed,
             std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 0.f, -1.f }));
         input.BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed,
@@ -128,17 +129,16 @@ tron::PlayerTank tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
         player2HPUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(player2HPUI.get(), "Lives: 0", SDL_Color{ 255, 0, 0, 255 }, fontSmall));
         player2HPUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(player2HPUI.get(), nullptr));
         player2HPUI->AddComponent<dae::HealthUIComponent>(std::make_unique<dae::HealthUIComponent>(player2HPUI.get(), playerGO->GetComponent<dae::HealthComponent>()));
-        
+
         auto player2ScoreUI = std::make_unique<dae::GameObject>();
         player2ScoreUI->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(player2ScoreUI.get(), 850.f, 40.f));
         player2ScoreUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(player2ScoreUI.get(), "Score: 0", SDL_Color{ 255, 0, 0, 255 }, fontSmall));
         player2ScoreUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(player2ScoreUI.get(), nullptr));
         player2ScoreUI->AddComponent<dae::ScoreUIComponent>(std::make_unique<dae::ScoreUIComponent>(player2ScoreUI.get(), playerGO->GetComponent<dae::ScoreComponent>()));
 
-
         scene.Add(std::move(player2HPUI));
         scene.Add(std::move(player2ScoreUI));
-        
+
         input.BindCommand(SDL_SCANCODE_UP, dae::KeyState::Pressed,
             std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 0.f, -1.f }));
         input.BindCommand(SDL_SCANCODE_DOWN, dae::KeyState::Pressed,
@@ -166,6 +166,19 @@ tron::PlayerTank tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
         std::make_unique<tron::RespawnComponent>(ptr, health, glm::vec2{ spawnX, spawnY }));
 
     auto* gun = CreateGun(scene, ptr, collision, layout, playerIndex);
+
+    // Keyboard shoot bindings: 4 cardinal directions, on top of WASD/arrow movement.
+    if (playerIndex == 0)
+    {
+        input.BindCommand(SDL_SCANCODE_UP, dae::KeyState::Pressed,
+            std::make_unique<tron::GunShootCommand>(gun, glm::vec2{ 0.f, -1.f }));
+        input.BindCommand(SDL_SCANCODE_DOWN, dae::KeyState::Pressed,
+            std::make_unique<tron::GunShootCommand>(gun, glm::vec2{ 0.f,  1.f }));
+        input.BindCommand(SDL_SCANCODE_LEFT, dae::KeyState::Pressed,
+            std::make_unique<tron::GunShootCommand>(gun, glm::vec2{ -1.f, 0.f }));
+        input.BindCommand(SDL_SCANCODE_RIGHT, dae::KeyState::Pressed,
+            std::make_unique<tron::GunShootCommand>(gun, glm::vec2{ 1.f, 0.f }));
+    }
     return { ptr, gun };
 }
 

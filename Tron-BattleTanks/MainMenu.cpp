@@ -21,9 +21,6 @@ void tron::MainMenu::Load(dae::Scene& scene, GameMode /*mode*/, LevelManager* /*
 {
     dae::InputManager::GetInstance().ClearCommands();
 
-    dae::ServiceLocator::GetSoundSystem().PlayMusic(
-        "Data/Sounds/End of Line (From TRON_ LegacyScore).mp3", 0.5f, -1);
-
     auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 28);
 
     constexpr float centerX = 512.f;
