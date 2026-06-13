@@ -13,6 +13,10 @@
 #include "HealthComponent.h"
 #include "RectColliderComponent.h"
 #include "RespawnComponent.h"
+#include "ScoreComponent.h"
+#include "TextComponent.h"
+#include "HealthUIComponent.h"
+#include "ScoreUIComponent.h"
 
 static tron::GunComponent* CreateGun(dae::Scene& scene, dae::GameObject* tankGO, tron::GridCollisionComponent* collision, const tron::LevelLayout& layout, int playerIndex)
 
@@ -73,12 +77,30 @@ tron::PlayerTank tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
 
     playerGO->AddComponent<dae::RectColliderComponent>(
         std::make_unique<dae::RectColliderComponent>(playerGO.get(), 0.f, 0.f, "player"));
+    playerGO->AddComponent<dae::ScoreComponent>(std::make_unique<dae::ScoreComponent>(playerGO.get()));
 
+
+    auto fontSmall = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 
     // Bind input based on player index
     auto& input = dae::InputManager::GetInstance();
     if (playerIndex == 0)
     {
+        auto player1HPUI = std::make_unique<dae::GameObject>();
+        player1HPUI->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(player1HPUI.get(), 0.f, 20.f));
+        player1HPUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(player1HPUI.get(), "Lives: 0", SDL_Color{ 0, 0, 255, 255 }, fontSmall));
+        player1HPUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(player1HPUI.get(), nullptr));
+        player1HPUI->AddComponent<dae::HealthUIComponent>(std::make_unique<dae::HealthUIComponent>(player1HPUI.get(), playerGO->GetComponent<dae::HealthComponent>()));
+
+        auto player1ScoreUI = std::make_unique<dae::GameObject>();
+        player1ScoreUI->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(player1ScoreUI.get(), 0.f, 40.f));
+        player1ScoreUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(player1ScoreUI.get(), "Score: 0", SDL_Color{ 255, 0, 0, 255 }, fontSmall));
+        player1ScoreUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(player1ScoreUI.get(), nullptr));
+        player1ScoreUI->AddComponent<dae::ScoreUIComponent>(std::make_unique<dae::ScoreUIComponent>(player1ScoreUI.get(), playerGO->GetComponent<dae::ScoreComponent>()));
+
+        scene.Add(std::move(player1HPUI));
+        scene.Add(std::move(player1ScoreUI));
+
         input.BindCommand(SDL_SCANCODE_W, dae::KeyState::Pressed,
             std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 0.f, -1.f }));
         input.BindCommand(SDL_SCANCODE_S, dae::KeyState::Pressed,
@@ -99,6 +121,22 @@ tron::PlayerTank tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
     }
     else
     {
+        auto player2HPUI = std::make_unique<dae::GameObject>();
+        player2HPUI->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(player2HPUI.get(), 800.f, 20.f));
+        player2HPUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(player2HPUI.get(), "Lives: 0", SDL_Color{ 255, 0, 0, 255 }, fontSmall));
+        player2HPUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(player2HPUI.get(), nullptr));
+        player2HPUI->AddComponent<dae::HealthUIComponent>(std::make_unique<dae::HealthUIComponent>(player2HPUI.get(), playerGO->GetComponent<dae::HealthComponent>()));
+        
+        auto player2ScoreUI = std::make_unique<dae::GameObject>();
+        player2ScoreUI->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(player2ScoreUI.get(), 800.f, 40.f));
+        player2ScoreUI->AddComponent<dae::TextComponent>(std::make_unique<dae::TextComponent>(player2ScoreUI.get(), "Score: 0", SDL_Color{ 255, 0, 0, 255 }, fontSmall));
+        player2ScoreUI->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(player2ScoreUI.get(), nullptr));
+        player2ScoreUI->AddComponent<dae::ScoreUIComponent>(std::make_unique<dae::ScoreUIComponent>(player2ScoreUI.get(), playerGO->GetComponent<dae::ScoreComponent>()));
+
+
+        scene.Add(std::move(player2HPUI));
+        scene.Add(std::move(player2ScoreUI));
+        
         input.BindCommand(SDL_SCANCODE_UP, dae::KeyState::Pressed,
             std::make_unique<tron::GridMoveCommand>(movement, glm::vec2{ 0.f, -1.f }));
         input.BindCommand(SDL_SCANCODE_DOWN, dae::KeyState::Pressed,
