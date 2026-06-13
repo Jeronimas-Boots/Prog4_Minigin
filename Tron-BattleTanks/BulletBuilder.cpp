@@ -6,6 +6,7 @@
 #include "TransformComponent.h"
 #include "RenderComponent.h"
 #include "ResourceManager.h"
+#include "RectColliderComponent.h"
 
 namespace
 {
@@ -14,14 +15,18 @@ namespace
     constexpr float kExplosionLifetime = 0.3f;
 }
 
-void tron::SpawnBullet(dae::Scene& scene, GridCollisionComponent* collision, const glm::vec3& position, const glm::vec2& direction, float renderAngle, float tileSize, float scale)
+void tron::SpawnBullet(dae::Scene& scene, GridCollisionComponent* collision,
+    const glm::vec3& position, const glm::vec2& direction,
+    float renderAngle, float tileSize, float scale,
+    const dae::GameObject* shooter,
+    std::vector<dae::GameObject*> targets)
 {
-    // offset = (48 - 12) / 2 * scale = 18 * scale (based on size of the tank and the bullet png)
     const float centerOffset = 18.f * scale;
     auto bulletGO = std::make_unique<dae::GameObject>();
 
     bulletGO->AddComponent<dae::TransformComponent>(
-        std::make_unique<dae::TransformComponent>(bulletGO.get(), position.x + centerOffset, position.y + centerOffset));
+        std::make_unique<dae::TransformComponent>(
+            bulletGO.get(), position.x + centerOffset, position.y + centerOffset));
 
     bulletGO->AddComponent<dae::RenderComponent>(
         std::make_unique<dae::RenderComponent>(
@@ -32,14 +37,19 @@ void tron::SpawnBullet(dae::Scene& scene, GridCollisionComponent* collision, con
     render->SetScale(scale, scale);
     render->SetAngle(renderAngle);
 
+    // Collider sized to match the CheckWall size (12 * scale)
+    bulletGO->AddComponent<dae::RectColliderComponent>(
+        std::make_unique<dae::RectColliderComponent>(
+            bulletGO.get(), 12.f * scale, 12.f * scale, "bullet"));
+
     bulletGO->AddComponent<tron::BulletComponent>(
         std::make_unique<tron::BulletComponent>(
             bulletGO.get(), collision, &scene, direction,
-            tileSize * kBulletSpeedMultiplier, tileSize, scale, kBulletLifetime));
+            tileSize * kBulletSpeedMultiplier, tileSize, scale, kBulletLifetime,
+            shooter, std::move(targets)));
 
     scene.Add(std::move(bulletGO));
 }
-
 void tron::SpawnExplosion(dae::Scene& scene, const glm::vec3& position, float /*tileSize*/, float scale)
 {
     auto explosionGO = std::make_unique<dae::GameObject>();

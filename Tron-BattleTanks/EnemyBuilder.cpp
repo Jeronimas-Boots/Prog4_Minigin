@@ -10,6 +10,8 @@
 #include "GunComponent.h"
 #include "TankStateComponent.h"
 #include "StatesTank.h"
+#include "HealthComponent.h"
+#include "RectColliderComponent.h"
 
 
 // Finds the top-left grid coordinate (col, row) of every 2x2 block of EnemyTankSpawn tiles.
@@ -101,6 +103,13 @@ std::vector<dae::GameObject*> tron::CreateEnemyTanks(dae::Scene& scene, GridColl
                 dae::ResourceManager::GetInstance().LoadTexture("GreenTank.png")));
 
         enemyGO->GetComponent<dae::RenderComponent>()->SetScale(layout.scale, layout.scale);
+
+        enemyGO->AddComponent<dae::HealthComponent>(
+            std::make_unique<dae::HealthComponent>(enemyGO.get(), 0)); // 1 hit kill
+
+        enemyGO->AddComponent<dae::RectColliderComponent>(
+            std::make_unique<dae::RectColliderComponent>(enemyGO.get(), 0.f, 0.f, "enemy"));
+
 
         auto* movement = enemyGO->AddComponent<tron::GridMovementComponent>(
             std::make_unique<tron::GridMovementComponent>(

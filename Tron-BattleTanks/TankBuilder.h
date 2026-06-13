@@ -2,11 +2,17 @@
 #include <memory>
 
 namespace dae { class GameObject; class Scene; }
+namespace tron { class GridCollisionComponent; struct LevelLayout; class GunComponent; }
 
 namespace tron
 {
-	class GridCollisionComponent; 
-	struct LevelLayout;
+    struct PlayerTank
+    {
+        dae::GameObject* tank;
+        GunComponent* gun;
+    };
 
-	dae::GameObject* CreatePlayer(dae::Scene& scene, GridCollisionComponent* collision, const LevelLayout& layout, float spawnX, float spawnY, int playerIndex);
+    PlayerTank CreatePlayer(dae::Scene& scene, GridCollisionComponent* collision,
+        const LevelLayout& layout, float spawnX, float spawnY,
+        int playerIndex);
 }

@@ -12,13 +12,13 @@
 #include "TankStateComponent.h"
 #include "ServiceLocator.h"
 #include "SDL_MixerSoundSystem.h"
+#include "GunComponent.h"
 
-void tron::Level0::Load(dae::Scene& scene, GameMode mode )
+void tron::Level0::Load(dae::Scene& scene, GameMode mode)
 {
     dae::ServiceLocator::GetSoundSystem().PlayMusic(
         "Data/Sounds/The Son of Flynn (From TRON_ LegacyScore).mp3", 0.5f, -1);
 
-    // Background
     auto backgroundGO = std::make_unique<dae::GameObject>();
     backgroundGO->AddComponent<dae::TransformComponent>(std::make_unique<dae::TransformComponent>(backgroundGO.get(), 0.f, 0.f, 0.f));
     backgroundGO->AddComponent<dae::RenderComponent>(std::make_unique<dae::RenderComponent>(
@@ -40,37 +40,44 @@ void tron::Level0::Load(dae::Scene& scene, GameMode mode )
 
     std::vector<glm::vec2> playerSpawns;
     for (int row = 0; row < static_cast<int>(layout.grid.size()) - 1; ++row)
-    {
         for (int col = 0; col < static_cast<int>(layout.grid[row].size()) - 1; ++col)
-        {
             if (layout.grid[row][col] == 6 &&
                 layout.grid[row][col + 1] == 6 &&
                 layout.grid[row + 1][col] == 6 &&
                 layout.grid[row + 1][col + 1] == 6)
-            {
                 playerSpawns.push_back({
                     layout.offsetX + col * layout.tileSize,
                     layout.offsetY + row * layout.tileSize });
-            }
-        }
-    }
 
-    // Spawn players based on game mode
+    std::vector<tron::PlayerTank> playerTanks;
     std::vector<dae::GameObject*> players;
 
     if (!playerSpawns.empty())
-        players.push_back(tron::CreatePlayer(scene, collision, layout,
-            playerSpawns[0].x, playerSpawns[0].y, 0));
+    {
+        auto pt = tron::CreatePlayer(scene, collision, layout,
+            playerSpawns[0].x, playerSpawns[0].y, 0);
+        players.push_back(pt.tank);
+        playerTanks.push_back(pt);
+    }
 
     if (mode == GameMode::CoOp || mode == GameMode::Versus)
         if (playerSpawns.size() >= 2)
-            players.push_back(tron::CreatePlayer(scene, collision, layout,
-                playerSpawns[1].x, playerSpawns[1].y, 1));
+        {
+            auto pt = tron::CreatePlayer(scene, collision, layout,
+                playerSpawns[1].x, playerSpawns[1].y, 1);
+            players.push_back(pt.tank);
+            playerTanks.push_back(pt);
+        }
 
-    // Spawn enemy tanks and target the player(s)
+    // Create enemies once
     auto enemyTanks = tron::CreateEnemyTanks(scene, collision, layout);
+
+    // Give enemies their targets (players)
     for (auto* enemy : enemyTanks)
-    {
         enemy->GetComponent<tron::TankStateComponent>()->SetTargets(players);
-    }
+
+    // Give player guns their targets (enemies)
+    for (auto& pt : playerTanks)
+        if (pt.gun)
+            pt.gun->SetBulletTargets(enemyTanks);
 }

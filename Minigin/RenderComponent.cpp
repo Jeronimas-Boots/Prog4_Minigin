@@ -41,3 +41,12 @@ void dae::RenderComponent::SetScale(float scaleX, float scaleY)
     m_ScaleX = scaleX;
     m_ScaleY = scaleY;
 }
+
+glm::vec2 dae::RenderComponent::GetScaledSize() const
+{
+    if (!m_pTexture) 
+        return { 0.f, 0.f };
+    float w{}, h{};
+    SDL_GetTextureSize(m_pTexture->GetSDLTexture(), &w, &h);
+    return { w * m_ScaleX, h * m_ScaleY };
+}

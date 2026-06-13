@@ -14,6 +14,7 @@ namespace dae
 
 		void SetTexture(std::shared_ptr<Texture2D> texture);
 		void SetScale(float scaleX, float scaleY);
+		glm::vec2 GetScaledSize() const;
 
 		void SetAngle(float angle) { m_Angle = angle; }
 		

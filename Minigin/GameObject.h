@@ -45,7 +45,7 @@ namespace dae
 		void SetLocalPosition(const glm::vec3& pos);
 		const glm::vec3& GetLocalPosition() const { return m_LocalPosition; }
 		const glm::vec3& GetWorldPosition();
-		
+		const GameObject* GetParent() const { return m_Parent; }
 
 		// Components
 		template<typename ComponentType>

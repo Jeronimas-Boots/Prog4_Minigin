@@ -55,14 +55,14 @@ bool tron::GunComponent::Shoot(const glm::vec2& direction)
     if (direction.x == 0.f && direction.y == 0.f) return false;
 
     const float renderAngle = std::atan2(direction.y, direction.x) * (180.f / glm::pi<float>());
-
     if (m_pRenderComponent)
         m_pRenderComponent->SetAngle(renderAngle);
 
     const glm::vec3 spawnPos = GetOwner()->GetWorldPosition();
+    const dae::GameObject* shooter = GetOwner()->GetParent(); // gun's parent = tank
 
     tron::SpawnBullet(*m_pScene, m_Collision, spawnPos, direction,
-        renderAngle, m_TileSize, m_Scale);
+        renderAngle, m_TileSize, m_Scale, shooter, m_BulletTargets);
 
     m_FireCooldown = m_FireRate;
     return true;

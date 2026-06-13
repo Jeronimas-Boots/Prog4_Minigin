@@ -1,7 +1,17 @@
 #include "GameObject.h"
 #include <algorithm>
 
-dae::GameObject::~GameObject() = default;
+dae::GameObject::~GameObject()
+{
+	for (auto* child : m_Children)
+	{
+		child->SetParent(nullptr);
+	}
+	if (m_Parent)
+	{
+		m_Parent->RemoveChild(this);
+	}
+}
 
 bool dae::GameObject::IsChild(GameObject* parent) const
 {
@@ -105,6 +115,10 @@ const glm::vec3& dae::GameObject::GetWorldPosition()
 void dae::GameObject::MarkForDeath()
 {
 	m_MarkedForDeath = true;
+	for (auto* child : m_Children)
+	{
+		child->MarkForDeath();
+	}
 }
 
 bool dae::GameObject::IsMarkedForDeath() const

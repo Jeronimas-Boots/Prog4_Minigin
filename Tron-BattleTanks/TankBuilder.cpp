@@ -10,8 +10,11 @@
 #include "InputManager.h"
 #include "GunComponent.h"
 #include "GridCollisionComponent.h"
+#include "HealthComponent.h"
+#include "RectColliderComponent.h"
+#include "RespawnComponent.h"
 
-static dae::GameObject* CreateGun(dae::Scene& scene, dae::GameObject* tankGO, tron::GridCollisionComponent* collision, const tron::LevelLayout& layout, int playerIndex)
+static tron::GunComponent* CreateGun(dae::Scene& scene, dae::GameObject* tankGO, tron::GridCollisionComponent* collision, const tron::LevelLayout& layout, int playerIndex)
 
 {
     const std::string texture = playerIndex == 0 ? "BlueTankGun.png" : "RedTankGun.png";
@@ -38,12 +41,13 @@ static dae::GameObject* CreateGun(dae::Scene& scene, dae::GameObject* tankGO, tr
 
     gunGO->SetParent(tankGO, false);
 
-    dae::GameObject* ptr = gunGO.get();
+    auto* gunComp = gunGO->GetComponent<tron::GunComponent>();
     scene.Add(std::move(gunGO));
-    return ptr;
+    return gunComp;
 }
 
-dae::GameObject* tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionComponent* collision, const tron::LevelLayout& layout, float spawnX, float spawnY, int playerIndex)
+tron::PlayerTank tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionComponent* collision,
+    const tron::LevelLayout& layout, float spawnX, float spawnY, int playerIndex) 
 {
     auto playerGO = std::make_unique<dae::GameObject>();
 
@@ -51,6 +55,7 @@ dae::GameObject* tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
 
     playerGO->AddComponent<dae::TransformComponent>(
         std::make_unique<dae::TransformComponent>(playerGO.get(), spawnX, spawnY));
+
 
     playerGO->AddComponent<dae::RenderComponent>(
         std::make_unique<dae::RenderComponent>(
@@ -62,6 +67,13 @@ dae::GameObject* tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
     auto* movement = playerGO->AddComponent<tron::GridMovementComponent>(
         std::make_unique<tron::GridMovementComponent>(
             playerGO.get(), collision, layout.tileSize * 8.f));
+
+    auto* health = playerGO->AddComponent<dae::HealthComponent>(
+        std::make_unique<dae::HealthComponent>(playerGO.get(), 3));
+
+    playerGO->AddComponent<dae::RectColliderComponent>(
+        std::make_unique<dae::RectColliderComponent>(playerGO.get(), 0.f, 0.f, "player"));
+
 
     // Bind input based on player index
     auto& input = dae::InputManager::GetInstance();
@@ -107,8 +119,13 @@ dae::GameObject* tron::CreatePlayer(dae::Scene& scene, tron::GridCollisionCompon
     }
 
     dae::GameObject* ptr = playerGO.get();
-    scene.Add(std::move(playerGO)); // tank must be in scene before setting parent
-    CreateGun(scene, ptr, collision, layout, playerIndex);
-    return ptr;
+    scene.Add(std::move(playerGO));
+
+    // ADD: respawn (after scene.Add so the component can find the transform)
+    ptr->AddComponent<tron::RespawnComponent>(
+        std::make_unique<tron::RespawnComponent>(ptr, health, glm::vec2{ spawnX, spawnY }));
+
+    auto* gun = CreateGun(scene, ptr, collision, layout, playerIndex);
+    return { ptr, gun };
 }
 

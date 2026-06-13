@@ -62,7 +62,7 @@ add_library(${TARGET_NAME} STATIC
   "Minigin/SDL_MixerSoundSystem.cpp"
   "Minigin/LevelLoader.h"
   "Minigin/LevelLoader.cpp"
- "Minigin/LifetimeComponent.h" "Minigin/LifetimeComponent.cpp")
+ "Minigin/LifetimeComponent.h" "Minigin/LifetimeComponent.cpp" "Minigin/RectColliderComponent.h" "Minigin/RectColliderComponent.cpp")
 
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
 
@@ -267,7 +267,7 @@ add_executable(Tron-BattleTanks WIN32
  "Tron-BattleTanks/BulletBuilder.h" 
  "Tron-BattleTanks/BulletBuilder.cpp" 
  "Tron-BattleTanks/EnemyBuilder.h" 
- "Tron-BattleTanks/EnemyBuilder.cpp")
+ "Tron-BattleTanks/EnemyBuilder.cpp" "Tron-BattleTanks/RespawnComponent.h" "Tron-BattleTanks/RespawnComponent.cpp")
 target_link_libraries(Tron-BattleTanks PRIVATE ${TARGET_NAME})
 
 if(EMSCRIPTEN)

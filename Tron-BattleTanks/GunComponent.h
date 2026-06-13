@@ -16,6 +16,9 @@ namespace tron
 
         bool Shoot(const glm::vec2& direction);
 
+        void SetBulletTargets(std::vector<dae::GameObject*> targets) { m_BulletTargets = std::move(targets); }
+
+
     private:
         int m_ControllerIndex;
         dae::RenderComponent* m_pRenderComponent{ nullptr };
@@ -26,5 +29,7 @@ namespace tron
 
         float m_FireCooldown{ 0.f };
         const float m_FireRate = 0.5f;
+
+        std::vector<dae::GameObject*> m_BulletTargets;
     };
 }

@@ -4,10 +4,15 @@
 #include "GameObject.h"
 #include "TransformComponent.h"
 #include "RenderComponent.h"
+#include "RectColliderComponent.h"
+#include "HealthComponent.h"
 #include <glm/gtc/constants.hpp>
 #include <cmath>
 
-tron::BulletComponent::BulletComponent(dae::GameObject* owner, GridCollisionComponent* collision, dae::Scene* scene, const glm::vec2& direction, float speed, float tileSize, float scale, float lifetime)
+tron::BulletComponent::BulletComponent(dae::GameObject* owner, GridCollisionComponent* collision,
+    dae::Scene* scene, const glm::vec2& direction, float speed, float tileSize,
+    float scale, float lifetime, const dae::GameObject* shooter,
+    std::vector<dae::GameObject*> targets)
     : Component(owner)
     , m_Collision(collision)
     , m_pScene(scene)
@@ -17,6 +22,8 @@ tron::BulletComponent::BulletComponent(dae::GameObject* owner, GridCollisionComp
     , m_TileSize(tileSize)
     , m_Scale(scale)
     , m_TimeLeft(lifetime)
+    , m_pShooter(shooter)
+    , m_Targets(std::move(targets))
 {
 }
 
@@ -40,7 +47,6 @@ void tron::BulletComponent::Update(float deltaTime)
 
     glm::vec3 next = current;
 
-    // Resolve X and Y independently so the bullet can bounce off walls
     if (CheckWall(m_Collision, current.x + moveX, current.y, size))
         m_Direction.x = -m_Direction.x;
     else
@@ -58,9 +64,41 @@ void tron::BulletComponent::Update(float deltaTime)
         const float angle = std::atan2(m_Direction.y, m_Direction.x) * (180.f / glm::pi<float>());
         m_pRenderComponent->SetAngle(angle);
     }
+
+    CheckTankCollisions();
 }
 
-bool tron::BulletComponent::CheckWall(tron::GridCollisionComponent* collision, float x, float y, float size) const
+void tron::BulletComponent::CheckTankCollisions()
+{
+    auto* bulletCollider = GetOwner()->GetComponent<dae::RectColliderComponent>();
+    if (!bulletCollider) return;
+
+    const dae::Rect bulletRect = bulletCollider->GetWorldRect();
+
+    for (auto* target : m_Targets)
+    {
+        if (!target || target == m_pShooter) continue;
+        if (target->IsMarkedForDeath())      continue;
+
+        auto* targetCollider = target->GetComponent<dae::RectColliderComponent>();
+        if (!targetCollider) continue;
+
+        if (dae::RectsOverlap(bulletRect, targetCollider->GetWorldRect()))
+        {
+            if (auto* health = target->GetComponent<dae::HealthComponent>())
+                health->LoseLife();  // players respawn via observer; enemies die (numLives=1)
+
+            if (auto* transform = GetOwner()->GetComponent<dae::TransformComponent>())
+                tron::SpawnExplosion(*m_pScene, transform->GetLocalPosition(), m_TileSize, m_Scale);
+
+            GetOwner()->MarkForDeath();
+            return; // bullet gone, stop checking
+        }
+    }
+}
+
+bool tron::BulletComponent::CheckWall(GridCollisionComponent* collision,
+    float x, float y, float size) const
 {
     const float center = size * 0.5f;
     return collision->IsWall(x + center, y + center);
